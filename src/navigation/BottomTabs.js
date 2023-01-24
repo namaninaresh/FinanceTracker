@@ -11,6 +11,35 @@ import Notifications from '../screens/Notifications';
 import Profile from '../screens/Profile';
 import Search from '../screens/Search';
 const Tab = createBottomTabNavigator();
+const items = [
+  {
+    name: 'Home',
+    component: Home,
+    iconName: 'home',
+  },
+  {
+    name: 'Search',
+    component: Search,
+    iconName: 'file-search',
+  },
+  {
+    name: 'addTransaction',
+    component: AddTransaction,
+    iconName: 'plus-circle',
+    iconColor: Colors.ORANGE_DARK,
+    iconSize: 30,
+  },
+  {
+    name: 'Notifications',
+    component: Notifications,
+    iconName: 'bell',
+  },
+  {
+    name: 'Profile',
+    component: Profile,
+    iconName: 'account',
+  },
+];
 
 const BottomTabs = props => {
   return (
@@ -26,7 +55,25 @@ const BottomTabs = props => {
           height: 60,
         },
       }}>
-      <Tab.Screen
+      {items.map((item, index) => (
+        <Tab.Screen
+          name={item.name}
+          key={index}
+          component={item.component}
+          options={{
+            tabBarLabel: item.name,
+            tabBarIcon: ({color, size}) => (
+              <Icon
+                name={item.iconName}
+                color={item.iconColor ? item.iconColor : color}
+                size={item.iconSize ? item.iconSize : size}
+              />
+            ),
+          }}
+        />
+      ))}
+
+      {/*<Tab.Screen
         name="Home"
         component={Home}
         options={{
@@ -79,7 +126,7 @@ const BottomTabs = props => {
             <Icon name="account" color={color} size={size} />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };

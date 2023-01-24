@@ -3,7 +3,15 @@ import {StyleSheet, View, Text, Animated} from 'react-native';
 import AppLayout from '../layout/AppLayout';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Colors} from '../styles';
+import Home from '../screens/Home';
 const Stack = createStackNavigator();
+
+const items = [
+  {
+    name: 'Home',
+    component: Home,
+  },
+];
 
 const config = {
   animation: 'spring',
@@ -53,15 +61,7 @@ const forSlide = ({current, next, inverted, layouts: {screen}}) => {
     },
   };
 };
-function HomeScreen() {
-  return (
-    <AppLayout>
-      <View style={{height: 100, backgroundColor: Colors.BLACK_4}}>
-        <Text style={{color: 'white'}}>HomeScreen</Text>
-      </View>
-    </AppLayout>
-  );
-}
+
 const StackNav = props => {
   return (
     <Stack.Navigator
@@ -69,25 +69,24 @@ const StackNav = props => {
       screenOptions={{
         headerMode: 'screen',
         headerTintColor: 'white',
-        headerStyle: {backgroundColor: 'tomato'},
+        headerStyle: {backgroundColor: Colors.BLACK_4},
       }}>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          cardStyleInterpolator: forSlide,
-          transitionSpec: {
-            open: config,
-            close: config,
-          },
-        }}
-      />
+      {items.map((item, index) => (
+        <Stack.Screen
+          name={item.name}
+          key={index}
+          component={item.component}
+          options={{
+            cardStyleInterpolator: forSlide,
+            transitionSpec: {
+              open: config,
+              close: config,
+            },
+          }}
+        />
+      ))}
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default StackNav;
