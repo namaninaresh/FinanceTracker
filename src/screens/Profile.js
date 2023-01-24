@@ -11,17 +11,17 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import AppLayout from '../layout/AppLayout';
-import {Colors} from '../styles';
+import {colors} from '../styles';
 
 const items = [
   {
     title: 'Accounts',
-    iconName: 'bank-plus',
+    iconName: 'bank',
     navigation: null,
   },
   {
     title: 'Cash',
-    iconName: 'cash-multiple',
+    iconName: 'cash',
     navigation: null,
   },
   {
@@ -76,7 +76,7 @@ const Profile = props => {
             <Text style={[styles.usertitle]}>Chinna Namani</Text>
             <Text style={styles.userdescription}>lobelychinna@</Text>
             <TouchableOpacity style={styles.editProfilebtn}>
-              <Text style={{color: Colors.GREEN_DARK, fontWeight: '700'}}>
+              <Text style={{color: colors.GREEN_DARK, fontWeight: '700'}}>
                 Edit Profile
               </Text>
             </TouchableOpacity>
@@ -97,9 +97,9 @@ const Profile = props => {
               style={[styles.card, {flexDirection: 'column', width: '100%'}]}>
               {items.map((item, index) => (
                 <TouchableOpacity style={[styles.listItem]} key={index}>
-                  <Icon color={Colors.WHITE_2} name={item.iconName} size={20} />
+                  <Icon color={colors.WHITE_2} name={item.iconName} size={20} />
                   <Text style={styles.cardTitle}>{item.title}</Text>
-                  <Icon color={Colors.WHITE_2} name="chevron-right" size={24} />
+                  <Icon color={colors.WHITE_2} name="chevron-right" size={24} />
                 </TouchableOpacity>
               ))}
             </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    backgroundColor: Colors.BLACK_4,
+    backgroundColor: colors.BLACK_4,
     marginHorizontal: 20,
     marginVertical: 10,
     borderRadius: 10,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     height: 90,
     justifyContent: 'center',
-    backgroundColor: Colors.BLACK_2,
+    backgroundColor: colors.BLACK_2,
     width: 90,
     marginHorizontal: 10,
     marginRight: 20,
@@ -150,20 +150,20 @@ const styles = StyleSheet.create({
   },
   usertitle: {
     fontWeight: '800',
-    color: Colors.WHITE_2,
+    color: colors.WHITE_2,
   },
   userdescription: {
     paddingVertical: 10,
     fontWeight: '300',
     letterSpacing: 1,
-    color: Colors.WHITE_3,
+    color: colors.WHITE_3,
   },
 
   card: {
     padding: 10,
 
     borderRadius: 10,
-    backgroundColor: Colors.BLACK_4,
+    backgroundColor: colors.BLACK_4,
     shadowOffset: {
       width: 0,
       height: 3,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     flex: 1,
     paddingVertical: 10,
-    color: Colors.WHITE_2,
+    color: colors.WHITE_2,
     paddingHorizontal: 20,
   },
   listItem: {

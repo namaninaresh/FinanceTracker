@@ -1,11 +1,14 @@
 import {StyleSheet, View, Text} from 'react-native';
+import Dashboard from '../components/molecules/Dashboard';
+import Recent from '../components/molecules/Recent';
 import AppLayout from '../layout/AppLayout';
 
 const Home = props => {
   return (
     <AppLayout>
       <View style={styles.container}>
-        <Text style={{color: 'white'}}>Home </Text>
+        <Dashboard />
+        <Recent />
       </View>
     </AppLayout>
   );

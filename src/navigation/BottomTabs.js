@@ -3,7 +3,7 @@ import AppLayout from '../layout/AppLayout';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Colors} from '../styles';
+import {colors} from '../styles';
 import Home from '../screens/Home';
 import Settings from '../screens/Settings';
 import AddTransaction from '../screens/AddTransaction';
@@ -20,19 +20,19 @@ const items = [
   {
     name: 'Search',
     component: Search,
-    iconName: 'file-search',
+    iconName: 'magnify',
   },
   {
     name: 'addTransaction',
     component: AddTransaction,
     iconName: 'plus-circle',
-    iconColor: Colors.ORANGE_DARK,
+    iconColor: colors.ORANGE_DARK,
     iconSize: 30,
   },
   {
     name: 'Notifications',
     component: Notifications,
-    iconName: 'bell',
+    iconName: 'bell-badge',
   },
   {
     name: 'Profile',
@@ -47,10 +47,10 @@ const BottomTabs = props => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: Colors.WHITE,
-        tabBarInactiveTintColor: Colors.BLACK_1,
+        tabBarActiveTintColor: colors.WHITE,
+        tabBarInactiveTintColor: colors.BLACK_1,
         tabBarStyle: {
-          backgroundColor: Colors.BLACK_4,
+          backgroundColor: colors.BLACK_4,
           borderTopWidth: 0,
           height: 60,
         },
@@ -101,7 +101,7 @@ const BottomTabs = props => {
           tabBarIcon: ({color, size, focused}) => (
             <Icon
               name="plus-circle"
-              color={focused ? Colors.ORANGE_DARK : Colors.ORANGE_LIGHT}
+              color={focused ? colors.ORANGE_DARK : colors.ORANGE_LIGHT}
               size={size}
             />
           ),

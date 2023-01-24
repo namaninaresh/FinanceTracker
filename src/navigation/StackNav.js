@@ -2,7 +2,7 @@ import {StyleSheet, View, Text, Animated} from 'react-native';
 
 import AppLayout from '../layout/AppLayout';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Colors} from '../styles';
+import {colors} from '../styles';
 import Home from '../screens/Home';
 const Stack = createStackNavigator();
 
@@ -69,7 +69,7 @@ const StackNav = props => {
       screenOptions={{
         headerMode: 'screen',
         headerTintColor: 'white',
-        headerStyle: {backgroundColor: Colors.BLACK_4},
+        headerStyle: {backgroundColor: colors.BLACK_4},
       }}>
       {items.map((item, index) => (
         <Stack.Screen

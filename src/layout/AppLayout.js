@@ -1,10 +1,10 @@
 import React from 'react';
 import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
-import {Colors} from '../styles';
+import {colors} from '../styles';
 const AppLayout = ({children, style}) => {
   const backgroundStyle = {
     fontFamily: 'Pacifico-Regular',
-    backgroundColor: Colors.BLACK_5,
+    backgroundColor: colors.BLACK_5,
   };
   return (
     <>
