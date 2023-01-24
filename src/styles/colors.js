@@ -29,6 +29,7 @@ export const BLUE_DARK = '#2A85FF';
 export const GREEN_DARK = '#83BF6E';
 export const ORANGE_DARK = '#FF6A55';
 export const VOILET_DARK = '#8E59FF';
+
 export const ORANGE_LIGHT = '#FFBC99';
 export const VOILET_LIGHT = '#CABDFF';
 export const BLUE_LIGHT = '#B1E5FC';

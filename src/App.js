@@ -1,20 +1,21 @@
 import React, {useEffect} from 'react';
-import {Text, View} from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
-import AppLayout from './layout/AppLayout';
-import SmsAndroid from 'react-native-get-sms-android';
-import {Colors} from './styles';
+import {Text, View, Animated} from 'react-native';
+
+import {NavigationContainer} from '@react-navigation/native';
+
+import 'react-native-gesture-handler';
+import StackNav from './navigation/StackNav';
+import BottomTabs from './navigation/BottomTabs';
+
 const App = props => {
   useEffect(() => {
-    SplashScreen.hide();
+    //  SplashScreen.hide();
   }, []);
 
   return (
-    <AppLayout>
-      <View style={{height: 100, backgroundColor: Colors.BLACK_4}}>
-        <Text style={{color: 'white'}}>hwllo</Text>
-      </View>
-    </AppLayout>
+    <NavigationContainer>
+      <BottomTabs />
+    </NavigationContainer>
   );
 };
 
