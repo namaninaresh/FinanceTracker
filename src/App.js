@@ -14,7 +14,7 @@ const App = props => {
 
   return (
     <NavigationContainer>
-      <BottomTabs />
+      <StackNav />
     </NavigationContainer>
   );
 };

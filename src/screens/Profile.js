@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {
   Button,
   Image,
@@ -17,12 +18,12 @@ const items = [
   {
     title: 'Accounts',
     iconName: 'bank',
-    navigation: null,
+    navigation: 'Accounts',
   },
   {
     title: 'Cash',
     iconName: 'cash',
-    navigation: null,
+    navigation: 'Accounts',
   },
   {
     title: 'Debit Loans',
@@ -42,12 +43,12 @@ const items = [
   {
     title: 'All Transactions',
     iconName: 'bank-transfer',
-    navigation: null,
+    navigation: 'All Transactions',
   },
   {
     title: 'Settings',
     iconName: 'cog-outline',
-    navigation: null,
+    navigation: 'Settings',
   },
   {
     title: 'Clear Cache',
@@ -62,6 +63,7 @@ const items = [
 ];
 
 const Profile = props => {
+  const navigation = useNavigation();
   return (
     <AppLayout>
       <View style={styles.container}>
@@ -75,7 +77,11 @@ const Profile = props => {
           <View>
             <Text style={[styles.usertitle]}>Chinna Namani</Text>
             <Text style={styles.userdescription}>lobelychinna@</Text>
-            <TouchableOpacity style={styles.editProfilebtn}>
+            <TouchableOpacity
+              style={styles.editProfilebtn}
+              onPress={() => {
+                navigation.navigate('EditProfile');
+              }}>
               <Text style={{color: colors.GREEN_DARK, fontWeight: '700'}}>
                 Edit Profile
               </Text>
@@ -96,7 +102,12 @@ const Profile = props => {
             <View
               style={[styles.card, {flexDirection: 'column', width: '100%'}]}>
               {items.map((item, index) => (
-                <TouchableOpacity style={[styles.listItem]} key={index}>
+                <TouchableOpacity
+                  style={[styles.listItem]}
+                  key={index}
+                  onPress={() => {
+                    item.navigation && navigation.navigate(item.navigation);
+                  }}>
                   <Icon color={colors.WHITE_2} name={item.iconName} size={20} />
                   <Text style={styles.cardTitle}>{item.title}</Text>
                   <Icon color={colors.WHITE_2} name="chevron-right" size={24} />

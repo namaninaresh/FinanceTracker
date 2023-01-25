@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
 
     marginVertical: 10,
-    marginHorizontal: 20,
     borderRadius: 10,
   },
   contained: {

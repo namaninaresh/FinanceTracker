@@ -4,12 +4,37 @@ import AppLayout from '../layout/AppLayout';
 import {createStackNavigator} from '@react-navigation/stack';
 import {colors} from '../styles';
 import Home from '../screens/Home';
+import AllTransactions from '../screens/AllTransactions';
+import BottomTabs from './BottomTabs';
+import Accounts from '../screens/Accounts';
+import Settings from '../screens/Settings';
+import EditProfile from '../screens/EditProfile';
 const Stack = createStackNavigator();
 
 const items = [
   {
-    name: 'Home',
-    component: Home,
+    name: 'HomeTab',
+    component: BottomTabs,
+  },
+  {
+    name: 'All Transactions',
+    component: AllTransactions,
+    headerShown: true,
+  },
+  {
+    name: 'Accounts',
+    component: Accounts,
+    headerShown: true,
+  },
+  {
+    name: 'Settings',
+    component: Settings,
+    headerShown: true,
+  },
+  {
+    name: 'EditProfile',
+    component: EditProfile,
+    headerShown: true,
   },
 ];
 
@@ -65,8 +90,9 @@ const forSlide = ({current, next, inverted, layouts: {screen}}) => {
 const StackNav = props => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeTab"
       screenOptions={{
+        headerShown: false,
         headerMode: 'screen',
         headerTintColor: 'white',
         headerStyle: {backgroundColor: colors.BLACK_4},
@@ -77,6 +103,7 @@ const StackNav = props => {
           key={index}
           component={item.component}
           options={{
+            headerShown: item.headerShown ? item.headerShown : false,
             cardStyleInterpolator: forSlide,
             transitionSpec: {
               open: config,

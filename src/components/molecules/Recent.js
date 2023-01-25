@@ -7,7 +7,7 @@ import {TransItem} from '../atoms';
 const Recent = props => {
   return (
     <Card>
-      <Card.Title beforeColor={colors.VOILET_LIGHT} navigate="Profile">
+      <Card.Title beforeColor={colors.VOILET_LIGHT} navigate="All Transactions">
         Recent
       </Card.Title>
 

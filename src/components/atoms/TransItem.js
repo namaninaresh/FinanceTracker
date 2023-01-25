@@ -3,7 +3,13 @@ import {colors} from '../../styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MoneyFormat, rupee} from '../../utils';
 
-const TransItem = ({type = 'expense', desc = null, title, showArrow}) => {
+const TransItem = ({
+  type = 'expense',
+  desc = null,
+  title,
+  showArrow,
+  amount = 0,
+}) => {
   let rupeeColor = type === 'expense' ? colors.ORANGE_DARK : colors.GREEN_DARK;
   return (
     <TouchableOpacity
@@ -18,7 +24,7 @@ const TransItem = ({type = 'expense', desc = null, title, showArrow}) => {
           <View style={{flexDirection: 'row', paddingVertical: 3}}>
             <Text style={{color: 'white', flex: 1}}>{title}</Text>
             <Text style={{color: rupeeColor, fontWeight: '800'}}>
-              {MoneyFormat(100)}
+              {MoneyFormat(amount)}
             </Text>
           </View>
           {desc && (

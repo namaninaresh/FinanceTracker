@@ -1,10 +1,12 @@
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import Text from '../components/atoms/Text';
+import AppLayout from '../layout/AppLayout';
 
 const Accounts = props => {
   return (
-    <View style={styles.container}>
-      <Text>Accounts</Text>
-    </View>
+    <AppLayout>
+      <Text>Accoutns</Text>
+    </AppLayout>
   );
 };
 

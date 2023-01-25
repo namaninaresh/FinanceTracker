@@ -22,6 +22,7 @@ const AppLayout = ({children, style}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 10,
   },
 });
 
