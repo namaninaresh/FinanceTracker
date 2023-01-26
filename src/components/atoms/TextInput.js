@@ -15,8 +15,12 @@ const TextInput = ({
   label,
   iconName,
   error,
+  value = '',
   password,
   onChangeText,
+  inputMode = 'text',
+  multiline = false,
+  placeholder = '',
   onFocus = () => {},
   style,
   ...props
@@ -41,11 +45,15 @@ const TextInput = ({
         <RNInput
           secureTextEntry={hidePassword}
           autoCorrect={false}
+          cursorColor={colors.WHITE_2}
           onFocus={() => {
             onFocus();
             setIsFocused(true);
           }}
-          value
+          value={value.toString()}
+          inputMode={inputMode}
+          placeholder={placeholder}
+          multiline
           onChangeText={onChangeText}
           onBlur={() => {
             setIsFocused(false);

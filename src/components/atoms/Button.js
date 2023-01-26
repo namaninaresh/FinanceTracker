@@ -21,6 +21,7 @@ const Button = ({
   style = {},
   ...props
 }) => {
+  let sizeStyle = {width: 64, margin: 'auto'};
   let modeVa = {backgroundColor: buttonColor};
 
   switch (mode) {

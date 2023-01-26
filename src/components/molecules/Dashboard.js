@@ -1,10 +1,18 @@
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import {colors} from '_styles';
 import {FONT_BOLD, FONT_SIZE_28} from '_styles/typography';
 import {rupee, MoneyFormat} from '_utils';
 import {Card} from '_atoms';
+import {useNavigation} from '@react-navigation/native';
 
 const Dashboard = props => {
+  const navigation = useNavigation();
   return (
     <Card>
       <Card.Title>Dashboard</Card.Title>
@@ -12,7 +20,8 @@ const Dashboard = props => {
         horizontal
         showsHorizontalScrollIndicator={false}
         bounces={true}>
-        <View
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Expenses')}
           style={{
             marginHorizontal: 10,
             marginVertical: 20,
@@ -28,7 +37,7 @@ const Dashboard = props => {
           }}>
           <Text style={{color: colors.WHITE}}>EXPENSES</Text>
           <Text style={styles.totalCost}>{MoneyFormat(1000)}</Text>
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             marginVertical: 20,

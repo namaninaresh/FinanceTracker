@@ -8,9 +8,10 @@ import {Swipeable} from 'react-native-gesture-handler';
 let row = [];
 let prevOpenedRow;
 
-const PrefixIcon = ({iconName}) => {
-  let name = 'bank';
+const PrefixIcon = ({iconName = 'bank'}) => {
+  let name = iconName;
   if (iconName === 'card') name = 'credit-card-outline';
+  if (iconName === 'cash') name = 'cash-multiple';
   return (
     <View
       style={{
@@ -47,7 +48,7 @@ const TransItem = ({item, index, onClick, prefix = false, style}) => {
           width: 50,
         }}>
         <Icon
-          name="delete"
+          name="trash-can-outline"
           size={30}
           color={colors.ORANGE_DARK}
           style={{

@@ -1,6 +1,9 @@
 import {Animated} from 'react-native';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import {colors} from '../styles';
 import AllTransactions from '../screens/AllTransactions';
 import BottomTabs from './BottomTabs';
@@ -8,6 +11,7 @@ import Accounts from '../screens/Accounts';
 import Settings from '../screens/Settings';
 import EditProfile from '../screens/EditProfile';
 import Modal from '../components/molecules/Modal';
+import Expenses from '../screens/Expenses';
 const Stack = createStackNavigator();
 
 const items = [
@@ -33,6 +37,11 @@ const items = [
   {
     name: 'EditProfile',
     component: EditProfile,
+    headerShown: true,
+  },
+  {
+    name: 'Expenses',
+    component: Expenses,
     headerShown: true,
   },
 ];

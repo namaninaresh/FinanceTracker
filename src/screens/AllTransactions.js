@@ -4,12 +4,15 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import Card from '../components/atoms/Card';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
 import AppLayout from '../layout/AppLayout';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const data = [
   {
     title: 'item 1',
@@ -54,6 +57,17 @@ const AllTransactions = props => {
   }, []);
   return (
     <AppLayout>
+      <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 10,
+          justifyContent: 'flex-end',
+        }}>
+        <Text style={{paddingHorizontal: 10}}>Filter</Text>
+        <Icon name="filter-variant" size={24} color={'white'} />
+      </TouchableOpacity>
+
       <Card>
         <FlatList
           data={[...data, ...data, ...data]}

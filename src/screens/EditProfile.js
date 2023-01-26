@@ -27,15 +27,18 @@ const EditProfile = props => {
           }}>
           <TextInput
             label={'Username'}
+            value=""
             iconName="account"
             style={{width: '100%'}}
           />
           <TextInput
             label={'Email'}
-            iconName="account"
+            iconName="email"
+            value=""
             style={{width: '100%'}}
           />
           <TextInput
+            value=""
             password={true}
             label={'Password'}
             iconName="lock"
