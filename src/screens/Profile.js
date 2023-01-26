@@ -106,7 +106,6 @@ const Profile = props => {
           <View
             style={{
               borderRadius: 10,
-              marginHorizontal: 20,
               marginVertical: 10,
             }}>
             <View
@@ -148,8 +147,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     backgroundColor: colors.BLACK_4,
-    marginHorizontal: 20,
-    marginVertical: 10,
+
     borderRadius: 10,
     alignItems: 'center',
     paddingVertical: 10,

@@ -1,30 +1,60 @@
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, FlatList} from 'react-native';
 import {colors} from '../../styles';
 
 import {Card} from '../atoms';
 import {TransItem} from '../atoms';
 
+const data = [
+  {
+    title: 'sample ',
+    desc: 'some sample',
+    amount: 1000,
+    type: 'income',
+    date: 'Mon , 26th Jan 2023',
+  },
+  {
+    title: 'sample 2',
+    desc: 'some sample2',
+    amount: 10,
+    type: 'expense',
+    date: 'Mon , 26th Jan 2023',
+  },
+  {
+    title: 'sample ',
+    desc: 'some sample',
+    amount: 1000,
+    type: 'income',
+    date: 'Mon , 26th Jan 2023',
+  },
+  {
+    title: 'sample 2',
+    desc: 'some sample2',
+    amount: 10,
+    type: 'expense',
+    date: 'Mon , 26th Jan 2023',
+  },
+];
+
 const Recent = props => {
+  const deleteItem = ({item, index}) => {
+    console.log('delete', item, index);
+  };
   return (
-    <Card>
+    <Card style={{paddingHorizontal: 0}}>
       <Card.Title beforeColor={colors.VOILET_LIGHT} navigate="All Transactions">
         Recent
       </Card.Title>
-
-      <TransItem title={'Metro Pay'} desc="metro scan from uppal to raidurg" />
-      <TransItem
-        type="income"
-        title={'Hyderabad Journey'}
-        desc="Hyderabad bus journey started at 8AM,Delux"
-      />
-      <TransItem
-        title={'Lunch Office'}
-        desc="office la lunch -manchuriya with snehitha"
-      />
-      <TransItem
-        title={'Train Journey wgl'}
-        desc="train to wgl -shathavahana at 4PM"
-      />
+      {data.map((item, index) => (
+        <TransItem
+          item={item}
+          key={index}
+          index={index}
+          onClick={() => {
+            //console.log("Pressed", item, index);
+            deleteItem({item, index});
+          }}
+        />
+      ))}
     </Card>
   );
 };

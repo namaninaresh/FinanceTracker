@@ -23,8 +23,6 @@ const Home = props => {
         <View style={styles.container}>
           <Dashboard />
           <Recent />
-          <Dashboard />
-          <Recent />
         </View>
       </ScrollView>
     </AppLayout>

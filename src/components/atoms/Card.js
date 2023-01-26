@@ -51,9 +51,6 @@ Card.Title = CardTitle;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-
     marginVertical: 10,
     borderRadius: 10,
   },
@@ -69,7 +66,8 @@ const styles = StyleSheet.create({
   },
   cardTitleContainer: {
     flexDirection: 'row',
-
+    marginHorizontal: 20,
+    marginVertical: 10,
     alignItems: 'center',
     paddingVertical: 10,
   },
