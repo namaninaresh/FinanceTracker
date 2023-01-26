@@ -1,4 +1,5 @@
-import {StyleSheet, View} from 'react-native';
+import React from 'react';
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import Card from '../components/atoms/Card';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
@@ -22,14 +23,35 @@ const data = [
     amount: 50,
     type: 'expense',
   },
+  {
+    title: 'Last Item',
+    desc: 'Last Item desc',
+    amount: 50,
+    type: 'expense',
+  },
 ];
 const AllTransactions = props => {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   return (
     <AppLayout>
       <Card>
-        {data.map((item, index) => {
-          return <TransItem {...item} key={index} />;
-        })}
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          {[...data, ...data, ...data].map((item, index) => {
+            return <TransItem {...item} key={index} />;
+          })}
+        </ScrollView>
       </Card>
     </AppLayout>
   );

@@ -1,14 +1,13 @@
-import {StyleSheet, View, Text, Animated} from 'react-native';
+import {Animated} from 'react-native';
 
-import AppLayout from '../layout/AppLayout';
 import {createStackNavigator} from '@react-navigation/stack';
 import {colors} from '../styles';
-import Home from '../screens/Home';
 import AllTransactions from '../screens/AllTransactions';
 import BottomTabs from './BottomTabs';
 import Accounts from '../screens/Accounts';
 import Settings from '../screens/Settings';
 import EditProfile from '../screens/EditProfile';
+import Modal from '../components/molecules/Modal';
 const Stack = createStackNavigator();
 
 const items = [
@@ -104,6 +103,8 @@ const StackNav = props => {
           component={item.component}
           options={{
             headerShown: item.headerShown ? item.headerShown : false,
+            gestureEnabled: true,
+            gestureDirection: 'horizontal',
             cardStyleInterpolator: forSlide,
             transitionSpec: {
               open: config,
@@ -112,6 +113,11 @@ const StackNav = props => {
           }}
         />
       ))}
+      <Stack.Screen
+        name="Modal"
+        component={Modal}
+        options={{presentation: 'transparentModal'}}
+      />
     </Stack.Navigator>
   );
 };

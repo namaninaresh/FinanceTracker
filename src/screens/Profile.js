@@ -81,6 +81,7 @@ const Profile = props => {
               title={'Edit Profile'}
               style={{marginHorizontal: 0, marginVertical: 0}}
               onPress={() => navigation.navigate('EditProfile')}
+              // onPress={() => navigation.navigate('Modal', {message: 'Success'})}
             />
             {/*<TouchableOpacity
               style={styles.editProfilebtn}
