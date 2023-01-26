@@ -2,7 +2,7 @@ import {StyleSheet, View, Text as RnText} from 'react-native/';
 
 import {colors} from '../../styles';
 
-const Text = ({children, style, variant}) => {
+const Text = ({children, style, variant, ...props}) => {
   let textStyle = {};
 
   switch (variant) {
@@ -58,7 +58,9 @@ const Text = ({children, style, variant}) => {
       break;
   }
   return (
-    <RnText style={[styles.container, textStyle, style]}>{children}</RnText>
+    <RnText style={[styles.container, textStyle, style]} {...props}>
+      {children}
+    </RnText>
   );
 };
 

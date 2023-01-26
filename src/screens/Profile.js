@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
 import {
-  Button,
   Image,
   Pressable,
   ScrollView,
@@ -11,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
+import Button from '../components/atoms/Button';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
 
@@ -77,15 +77,24 @@ const Profile = props => {
           <View>
             <Text style={[styles.usertitle]}>Chinna Namani</Text>
             <Text style={styles.userdescription}>lobelychinna@</Text>
-            <TouchableOpacity
+            <Button
+              title={'Edit Profile'}
+              style={{marginHorizontal: 0, marginVertical: 0}}
+              onPress={() => navigation.navigate('EditProfile')}
+            />
+            {/*<TouchableOpacity
               style={styles.editProfilebtn}
               onPress={() => {
                 navigation.navigate('EditProfile');
               }}>
-              <Text style={{color: colors.GREEN_DARK, fontWeight: '700'}}>
+              <Text
+                style={{
+                  color: colors.GREEN_DARK,
+                  fontWeight: '700',
+                }}>
                 Edit Profile
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
