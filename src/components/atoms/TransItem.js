@@ -1,7 +1,7 @@
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {colors} from '../../styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {MoneyFormat, rupee} from '../../utils';
+import {dateFormatter, MoneyFormat, rupee} from '../../utils';
 
 import {Swipeable} from 'react-native-gesture-handler';
 
@@ -130,7 +130,7 @@ const TransItem = ({item, index, onClick, prefix = false, style}) => {
                   fontSize: 12,
                   opacity: 0.3,
                 }}>
-                {date}
+                {dateFormatter(date)}
               </Text>
             )}
           </View>

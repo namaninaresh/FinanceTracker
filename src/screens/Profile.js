@@ -20,11 +20,11 @@ const items = [
     iconName: 'bank',
     navigation: 'Accounts',
   },
-  {
+  /*{
     title: 'Cash',
     iconName: 'cash',
     navigation: 'Accounts',
-  },
+  }, */
   {
     title: 'Debit Loans',
     iconName: 'account-cash',

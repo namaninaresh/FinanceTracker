@@ -21,7 +21,13 @@ function CardTitle({
       )}
       <Text style={[styles.cardTitle, style]}>{children}</Text>
       {navigate && (
-        <TouchableOpacity onPress={() => navigation.navigate(navigate)}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(navigate)}
+          style={{
+            backgroundColor: colors.BLACK_3,
+            padding: 2,
+            borderRadius: 40,
+          }}>
           <Icon name="chevron-right" size={20} color={'white'} />
         </TouchableOpacity>
       )}

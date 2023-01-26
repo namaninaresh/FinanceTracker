@@ -10,28 +10,28 @@ const data = [
     desc: 'some sample',
     amount: 1000,
     type: 'income',
-    date: 'Mon , 26th Jan 2023',
+    date: new Date(),
   },
   {
     title: 'sample 2',
     desc: 'some sample2',
     amount: 10,
     type: 'expense',
-    date: 'Mon , 26th Jan 2023',
+    date: new Date(),
   },
   {
     title: 'sample ',
     desc: 'some sample',
     amount: 1000,
     type: 'income',
-    date: 'Mon , 26th Jan 2023',
+    date: new Date(),
   },
   {
     title: 'sample 2',
     desc: 'some sample2',
     amount: 10,
     type: 'expense',
-    date: 'Mon , 26th Jan 2023',
+    date: new Date(),
   },
 ];
 
