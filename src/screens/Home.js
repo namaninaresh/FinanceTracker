@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, RefreshControl} from 'react-native';
 import Dashboard from '../components/molecules/Dashboard';
 import Recent from '../components/molecules/Recent';
 import AppLayout from '../layout/AppLayout';
-
 const Home = props => {
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -13,6 +12,7 @@ const Home = props => {
       setRefreshing(false);
     }, 2000);
   }, []);
+
   return (
     <AppLayout>
       <ScrollView

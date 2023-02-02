@@ -1,28 +1,29 @@
 import {StyleSheet, View, Text as RnText} from 'react-native/';
 
 import {colors} from '../../styles';
+import {scaleFont} from '../../styles/mixins';
 
 const Text = ({children, style, variant, ...props}) => {
   let textStyle = {};
 
   switch (variant) {
     case 'displayLarge':
-      textStyle = {fontSize: 50, fontWeight: '600'};
+      textStyle = {fontSize: scaleFont(50), fontWeight: '600'};
       break;
     case 'displayMedium':
-      textStyle = {fontSize: 40, fontWeight: '600'};
+      textStyle = {fontSize: scaleFont(40), fontWeight: '600'};
       break;
     case 'displaySmall':
-      textStyle = {fontSize: 30, fontWeight: '600'};
+      textStyle = {fontSize: scaleFont(30), fontWeight: '600'};
       break;
     case 'headlineLarge':
-      textStyle = {fontSize: 30, fontWeight: '600'};
+      textStyle = {fontSize: scaleFont(30), fontWeight: '600'};
       break;
     case 'headlineMedium':
-      textStyle = {fontSize: 24, fontWeight: '600'};
+      textStyle = {fontSize: scaleFont(24), fontWeight: '600'};
       break;
     case 'headlineSmall':
-      textStyle = {fontSize: 22, fontWeight: '500'};
+      textStyle = {fontSize: scaleFont(22), fontWeight: '500'};
       break;
 
     case 'titleLarge':

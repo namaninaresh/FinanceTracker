@@ -14,6 +14,7 @@ import Card from '../components/atoms/Card';
 import Dropdown from '../components/atoms/Dropdown';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
+import Chip from '../components/molecules/Chip';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
 
@@ -48,6 +49,7 @@ const data = [
   },
 ];
 const AllTransactions = props => {
+  const [filterSelected, setFilters] = useState([]);
   const deleteItem = ({item, index}) => {
     console.log('delete', item, index);
   };
@@ -62,8 +64,41 @@ const AllTransactions = props => {
 
   const options = ['All', 'Today', 'Price-High', 'Price-low'];
 
-  const onValueChange = () => {
-    console.log('change');
+  const deleteFilter = index => {
+    setFilters(current => current.filter((item, i) => i !== index));
+    /*const index= filterSelected.findIndex(item => item.include("price"));
+
+   if(index !== -1)
+   {
+    filterSelected.splice(index,1,text);
+   }
+   else filterSelected.push(text); */
+  };
+
+  const onValueChange = text => {
+    const array = [...filterSelected];
+    if (text.includes('Price')) {
+      const index = array.findIndex(item => item.includes('Price'));
+      if (index !== -1) {
+        array.splice(index, 1);
+        setFilters([...array, text]);
+      } else {
+        setFilters([...array, text]);
+      }
+    } else if (text.includes('All') || text.includes('Today')) {
+      const index = array.findIndex(
+        item => item.includes('All') || item.includes('Today'),
+      );
+      if (index !== -1) {
+        array.splice(index, 1);
+        setFilters([...array, text]);
+      } else {
+        setFilters([...array, text]);
+      }
+    } else {
+      if (filterSelected.indexOf(text) === -1)
+        setFilters([...filterSelected, text]);
+    }
   };
   return (
     <AppLayout>
@@ -81,9 +116,27 @@ const AllTransactions = props => {
             justifyContent: 'flex-end',
           }}>
           <Text style={{paddingHorizontal: 10}}>Filter By</Text>
+
           {/*<Icon name="filter-variant" size={24} color={'white'} /> */}
         </TouchableOpacity>
         <Dropdown options={options} onValueChange={onValueChange} />
+      </View>
+      <View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          bounces={true}>
+          {filterSelected.map((filter, index) => (
+            <Chip
+              size="small"
+              label={filter}
+              key={index}
+              variant="filled"
+              color="default"
+              onDelete={() => deleteFilter(index)}
+            />
+          ))}
+        </ScrollView>
       </View>
 
       <Card>
@@ -105,7 +158,7 @@ const AllTransactions = props => {
           )}
           contentContainerStyle={{
             padding: 5,
-            paddingBottom: 20,
+            paddingBottom: 20 + (filterSelected.length > 0 && 30),
           }}
         />
 

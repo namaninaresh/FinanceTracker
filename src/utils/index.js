@@ -105,3 +105,60 @@ export const dateFormatter = currentDate => {
   return dateF;
   //return [fDate, fTime];
 };
+
+export function getLastWorkingDay() {
+  // Get the current date
+  var currentDate = new Date();
+
+  // Get the last day of the last month
+  var lastMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    0,
+  );
+
+  console.log('lastmont', currentDate, lastMonth);
+  // Get the day of the week for the last day of the last month (0 - Sunday, 1 - Monday, etc.)
+  var lastDayOfWeek = lastMonth.getDay();
+
+  // Check if the last day of the last month is a working day (not a weekend)
+  if (lastDayOfWeek === 0 || lastDayOfWeek === 6) {
+    // If it's a weekend, subtract one day and check again
+    lastMonth.setDate(lastMonth.getDate() - 1);
+    lastDayOfWeek = lastMonth.getDay();
+
+    if (lastDayOfWeek === 0 || lastDayOfWeek === 6) {
+      // If it's still a weekend, subtract one more day
+      lastMonth.setDate(lastMonth.getDate() - 1);
+    }
+  }
+
+  // Format the last working day of the last month for display
+  var lastWorkingDay = lastMonth.toLocaleDateString();
+  console.log('Last working day of last month: ' + lastWorkingDay);
+
+  var lastWorkingDayTimestamp = lastMonth.getTime() / 1000;
+  return lastWorkingDayTimestamp;
+  /*var currentDate = new Date();
+
+  var lastMonth = currentDate.getMonth() - 1;
+
+  if (lastMonth < 0) {
+    lastMonth = 11;
+    currentDate.setFullYear(currentDate.getFullYear() - 1);
+  }
+
+  var lastDayOfLastMonth = new Date(
+    currentDate.getFullYear(),
+    lastMonth + 1,
+    0,
+  );
+  var lastDayOfLastMonthWeekday = lastDayOfLastMonth.getUTCDay();
+
+  while (lastDayOfLastMonthWeekday === 0 || lastDayOfLastMonthWeekday === 6) {
+    lastDayOfLastMonth.setDate(lastDayOfLastMonth.getDate() - 1);
+    lastDayOfLastMonthWeekday = lastDayOfLastMonth.getUTCDay();
+  }
+
+  return lastDayOfLastMonth; */
+}
