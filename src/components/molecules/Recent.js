@@ -12,8 +12,9 @@ import {Card} from '../atoms';
 import {TransItem} from '../atoms';
 
 import SmsAndroid from 'react-native-get-sms-android';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {getLastWorkingDay} from '../../utils';
+import {UserContext} from '../../context/UserContext';
 const data = [
   {
     title: 'sample ',
@@ -50,7 +51,9 @@ const Recent = props => {
     console.log('delete', item, index);
   };
 
+  const {transactions} = useContext(UserContext);
   const [items, setItems] = useState([]);
+  const arr = useContext(UserContext);
   var filter = {
     box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
 
@@ -124,27 +127,28 @@ const Recent = props => {
     }
   };
 
-  console.log(items);
   useEffect(() => {
     // getLastWorkingDay();
-    requestSmsPermission();
+    //requestSmsPermission();
   }, []);
   return (
     <Card style={{paddingHorizontal: 0}}>
       <Card.Title beforeColor={colors.VOILET_LIGHT} navigate="All Transactions">
         Recent
       </Card.Title>
-      {items.map((item, index) => (
-        <TransItem
-          item={item}
-          key={index}
-          index={index}
-          onClick={() => {
-            //console.log("Pressed", item, index);
-            deleteItem({item, index});
-          }}
-        />
-      ))}
+      {transactions.map((item, index) => {
+        return (
+          <TransItem
+            item={item}
+            key={index}
+            index={index}
+            onClick={() => {
+              //console.log("Pressed", item, index);
+              deleteItem({item, index});
+            }}
+          />
+        );
+      })}
     </Card>
   );
 };

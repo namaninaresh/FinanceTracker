@@ -8,6 +8,7 @@ import StackNav from './navigation/StackNav';
 import BottomTabs from './navigation/BottomTabs';
 import Splash from './screens/Splash';
 import SplashScreen from 'react-native-splash-screen';
+import UserContextProvider from './context/UserContext';
 
 const App = props => {
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,9 @@ const App = props => {
 
   return (
     <NavigationContainer>
-      <StackNav />
+      <UserContextProvider>
+        <StackNav />
+      </UserContextProvider>
     </NavigationContainer>
   );
 };

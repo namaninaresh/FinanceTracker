@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Alert,
   Keyboard,
@@ -16,12 +16,16 @@ import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
 import Text from '../components/atoms/Text';
 import {dateFormatter} from '../utils';
+import {UserContext} from '../context/UserContext';
+import {useNavigation} from '@react-navigation/native';
 
 const AddTransaction = ({navigation}) => {
+  // const navigation = useNavigation();
+  const {addTransaction} = useContext(UserContext);
   const [inputs, setInputs] = useState({
     title: '',
     amount: 0,
-    description: '',
+    desc: '',
     date: new Date(),
     dateTimeText: {
       date: null,
@@ -55,8 +59,8 @@ const AddTransaction = ({navigation}) => {
       valid = false;
     }
 
-    if (!inputs.description) {
-      handleError('Please enter description', 'description');
+    if (!inputs.desc) {
+      handleError('Please enter description', 'desc');
       valid = false;
     }
 
@@ -67,11 +71,16 @@ const AddTransaction = ({navigation}) => {
     setLoading(true);
     setTimeout(async () => {
       setLoading(false);
-
+      addTransaction(inputs);
       setInputs({
         title: '',
         amount: 0,
-        description: '',
+        desc: '',
+        date: new Date(),
+        dateTimeText: {
+          date: null,
+          time: null,
+        },
       });
 
       // Alert.alert('Error', 'Something is wrong');
@@ -81,7 +90,7 @@ const AddTransaction = ({navigation}) => {
     setInputs({
       title: '',
       amount: 0,
-      description: '',
+      desc: '',
       date: new Date(),
       dateTimeText: {
         date: null,
@@ -160,14 +169,14 @@ const AddTransaction = ({navigation}) => {
             onChangeText={text => handleChange(text, 'amount')}
           />
           <TextInput
-            value={inputs.description}
+            value={inputs.desc}
             multiline={true}
-            label={'Description'}
-            error={errors.description}
+            label={'desc'}
+            error={errors.desc}
             onFocus={() => {
-              handleError(null, 'description');
+              handleError(null, 'desc');
             }}
-            onChangeText={text => handleChange(text, 'description')}
+            onChangeText={text => handleChange(text, 'desc')}
             iconName="comment-text-outline"
             style={{width: '100%'}}
           />

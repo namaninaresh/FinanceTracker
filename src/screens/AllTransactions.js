@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -15,6 +15,7 @@ import Dropdown from '../components/atoms/Dropdown';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
 import Chip from '../components/molecules/Chip';
+import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
 
@@ -53,6 +54,8 @@ const AllTransactions = props => {
   const deleteItem = ({item, index}) => {
     console.log('delete', item, index);
   };
+
+  const {transactions} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -141,7 +144,7 @@ const AllTransactions = props => {
 
       <Card>
         <FlatList
-          data={[...data, ...data, ...data]}
+          data={transactions}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}

@@ -10,8 +10,13 @@ import {FONT_BOLD, FONT_SIZE_28} from '_styles/typography';
 import {rupee, MoneyFormat} from '_utils';
 import {Card} from '_atoms';
 import {useNavigation} from '@react-navigation/native';
+import {useContext} from 'react';
+import {UserContext} from '../../context/UserContext';
 
 const Dashboard = props => {
+  const {totalExpense} = useContext(UserContext);
+
+  console.log('tootle', totalExpense);
   const navigation = useNavigation();
   return (
     <Card>
@@ -36,7 +41,7 @@ const Dashboard = props => {
             width: 200,
           }}>
           <Text style={{color: colors.WHITE}}>EXPENSES</Text>
-          <Text style={styles.totalCost}>{MoneyFormat(1000)}</Text>
+          <Text style={styles.totalCost}>{MoneyFormat(totalExpense)}</Text>
         </TouchableOpacity>
         <View
           style={{

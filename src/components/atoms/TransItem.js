@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {dateFormatter, MoneyFormat, rupee} from '../../utils';
 
 import {Swipeable} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 
 let row = [];
 let prevOpenedRow;
@@ -29,6 +30,7 @@ const PrefixIcon = ({iconName = 'bank'}) => {
 };
 
 const TransItem = ({item, index, onClick, prefix = false, style}) => {
+  const navigation = useNavigation();
   let {type = 'expense', title, desc = null, amount = 0, date, vendor} = item;
   let rupeeColor = type === 'expense' ? colors.ORANGE_DARK : colors.GREEN_DARK;
   const closeRow = index => {
@@ -96,6 +98,9 @@ const TransItem = ({item, index, onClick, prefix = false, style}) => {
       ref={ref => (row[index] = ref)}
       rightOpenValue={-100}>
       <TouchableOpacity
+        onPress={() => {
+          console.log('test');
+        }}
         style={{
           backgroundColor: colors.BLACK_4,
           paddingVertical: 10,
@@ -107,13 +112,16 @@ const TransItem = ({item, index, onClick, prefix = false, style}) => {
           {prefix && <PrefixIcon iconName={vendor} />}
           <View style={[{flex: 1}, itemStyle]}>
             <View style={{flexDirection: 'row', paddingVertical: 3}}>
-              <Text style={{color: 'white', flex: 1}}>{title}</Text>
+              <Text style={{color: 'white', flex: 1}} numberOfLines={2}>
+                {title}
+              </Text>
               <Text style={{color: rupeeColor, fontWeight: '800'}}>
                 {MoneyFormat(amount)}
               </Text>
             </View>
             {desc && (
               <Text
+                numberOfLines={1}
                 style={{
                   color: 'white',
                   fontSize: 12,
