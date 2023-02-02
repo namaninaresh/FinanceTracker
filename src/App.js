@@ -7,11 +7,12 @@ import 'react-native-gesture-handler';
 import StackNav from './navigation/StackNav';
 import BottomTabs from './navigation/BottomTabs';
 import Splash from './screens/Splash';
+import SplashScreen from 'react-native-splash-screen';
 
 const App = props => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    //  SplashScreen.hide();
+    SplashScreen.hide();
   }, []);
 
   return (
