@@ -3,7 +3,11 @@ import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native';
 
 import {colors} from '../../styles';
 import Text from './Text';
-const Loader = ({visible = true}) => {
+const Loader = ({
+  visible = true,
+  label = 'Loading ...',
+  icon = <ActivityIndicator size={'large'} color={colors.WHITE_2} />,
+}) => {
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   return (
@@ -11,8 +15,8 @@ const Loader = ({visible = true}) => {
       <View
         style={[styles.container, {height: windowHeight, width: windowWidth}]}>
         <View style={styles.loader}>
-          <ActivityIndicator size={'large'} color={colors.WHITE_2} />
-          <Text style={{paddingHorizontal: 20}}>Loading...</Text>
+          {icon}
+          <Text style={{paddingHorizontal: 20}}>{label}</Text>
         </View>
       </View>
     )

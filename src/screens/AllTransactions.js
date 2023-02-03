@@ -49,13 +49,13 @@ const data = [
     date: new Date(),
   },
 ];
-const AllTransactions = props => {
+const AllTransactions = ({navigation}) => {
   const [filterSelected, setFilters] = useState([]);
   const deleteItem = ({item, index}) => {
     console.log('delete', item, index);
   };
 
-  const {transactions} = useContext(UserContext);
+  const {transactions, deleteTransaction} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
@@ -154,9 +154,9 @@ const AllTransactions = props => {
               index={index}
               key={index}
               onClick={() => {
-                //console.log("Pressed", item, index);
-                deleteItem({item, index});
+                navigation.navigate('addTransaction', item);
               }}
+              onDelete={() => deleteTransaction(item)}
             />
           )}
           contentContainerStyle={{

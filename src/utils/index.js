@@ -162,3 +162,8 @@ export function getLastWorkingDay() {
 
   return lastDayOfLastMonth; */
 }
+
+export const generateUniqueId = title => {
+  const timestamp = new Date().getTime().toString();
+  return `${title}-${timestamp}`;
+};

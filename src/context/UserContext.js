@@ -2,46 +2,56 @@ import {createContext, useEffect, useReducer, useState} from 'react';
 import SmsAndroid from 'react-native-get-sms-android';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PermissionsAndroid} from 'react-native';
+import UserReducer, {
+  ADD_ACCOUNT,
+  ADD_TRANSACTION,
+  DELETE_ACCOUNT,
+  DELETE_TRANSACTION,
+  initialState,
+  UPDATE_ACCOUNT,
+  UPDATE_TRANSACTION,
+} from './UserReducer';
 
-const initialState = {
-  transactions: [
-    {
-      title: 'Test 1',
-      amount: 1000,
-      desc: 'Test sampel',
-      date: new Date(),
-      dateTimeText: {
-        date: null,
-        time: null,
-      },
-    },
-  ],
-  totalExpense: 0,
-  accounts: [],
-};
 export const UserContext = createContext(initialState);
 
-const globalReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TRANSACTION':
-      return {
-        ...state,
-        totalExpense:
-          Number(action.payload.amount) + Number(state.totalExpense),
-        transactions: [...state.transactions, action.payload],
-      };
-    default:
-      return state;
-  }
-};
-
 const UserContextProvider = ({children}) => {
-  const [state, dispatch] = useReducer(globalReducer, initialState);
+  const [state, dispatch] = useReducer(UserReducer, initialState);
 
   const addTransaction = transaction => {
     dispatch({
-      type: 'ADD_TRANSACTION',
+      type: ADD_TRANSACTION,
       payload: transaction,
+    });
+  };
+  const updateTransaction = transaction => {
+    dispatch({
+      type: UPDATE_TRANSACTION,
+      payload: transaction,
+    });
+  };
+  const deleteTransaction = transaction => {
+    dispatch({
+      type: DELETE_TRANSACTION,
+      payload: transaction,
+    });
+  };
+  const addAccount = account => {
+    dispatch({
+      type: ADD_ACCOUNT,
+      payload: account,
+    });
+  };
+  const updateAccount = account => {
+    dispatch({
+      type: UPDATE_ACCOUNT,
+      payload: account,
+    });
+  };
+
+  const deleteAccount = account => {
+    dispatch({
+      type: DELETE_ACCOUNT,
+      payload: account,
     });
   };
 
@@ -115,7 +125,13 @@ const UserContextProvider = ({children}) => {
       value={{
         transactions: state.transactions,
         addTransaction,
+        addAccount,
+        updateAccount,
+        deleteAccount,
+        updateTransaction,
+        deleteTransaction,
         totalExpense: state.totalExpense,
+        accounts: state.accounts,
       }}>
       {children}
     </UserContext.Provider>

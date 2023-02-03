@@ -12,6 +12,8 @@ import Settings from '../screens/Settings';
 import EditProfile from '../screens/EditProfile';
 import Modal from '../components/molecules/Modal';
 import Expenses from '../screens/Expenses';
+import EditTransaction from '../screens/EditTransaction';
+import AddAccountModal from '../screens/AddAccountModal';
 const Stack = createStackNavigator();
 
 const items = [
@@ -42,6 +44,16 @@ const items = [
   {
     name: 'Expenses',
     component: Expenses,
+    headerShown: true,
+  },
+  {
+    name: 'EditTransaction',
+    component: EditTransaction,
+    headerShown: true,
+  },
+  {
+    name: 'AddAccount',
+    component: AddAccountModal,
     headerShown: true,
   },
 ];

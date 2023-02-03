@@ -15,6 +15,7 @@ import SmsAndroid from 'react-native-get-sms-android';
 import {useContext, useEffect, useState} from 'react';
 import {getLastWorkingDay} from '../../utils';
 import {UserContext} from '../../context/UserContext';
+import {useNavigation} from '@react-navigation/native';
 const data = [
   {
     title: 'sample ',
@@ -50,8 +51,9 @@ const Recent = props => {
   const deleteItem = ({item, index}) => {
     console.log('delete', item, index);
   };
+  const navigation = useNavigation();
 
-  const {transactions} = useContext(UserContext);
+  const {transactions, deleteTransaction} = useContext(UserContext);
   const [items, setItems] = useState([]);
   const arr = useContext(UserContext);
   var filter = {
@@ -143,9 +145,9 @@ const Recent = props => {
             key={index}
             index={index}
             onClick={() => {
-              //console.log("Pressed", item, index);
-              deleteItem({item, index});
+              navigation.navigate('addTransaction', item);
             }}
+            onDelete={() => deleteTransaction(item)}
           />
         );
       })}

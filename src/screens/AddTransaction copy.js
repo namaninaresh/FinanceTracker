@@ -21,26 +21,20 @@ import {UserContext} from '../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import CustomPicker from '../components/molecules/CustomPicker';
 
-const AddTransaction = ({navigation, route}) => {
+const AddTransaction = ({navigation}) => {
   // const navigation = useNavigation();
-  const item = route.params;
-  console.log('add', item);
-  const {addTransaction, updateTransaction, accounts} = useContext(UserContext);
+  const {addTransaction, accounts} = useContext(UserContext);
 
-  const [inputs, setInputs] = useState(
-    item
-      ? item
-      : {
-          title: '',
-          amount: 0,
-          desc: '',
-          date: new Date(),
-          dateTimeText: {
-            date: null,
-            time: null,
-          },
-        },
-  );
+  const [inputs, setInputs] = useState({
+    title: '',
+    amount: 0,
+    desc: '',
+    date: new Date(),
+    dateTimeText: {
+      date: null,
+      time: null,
+    },
+  });
   const [showDate, setShowDate] = useState(false);
   const [mode, setMode] = useState('date');
   const [modeDate, setDateMode] = useState({mode: 'date', showDate: false});
@@ -80,7 +74,7 @@ const AddTransaction = ({navigation, route}) => {
     setLoading(true);
     setTimeout(async () => {
       setLoading(false);
-      item ? updateTransaction(inputs) : addTransaction(inputs);
+      addTransaction(inputs);
       setInputs({
         title: '',
         amount: 0,
@@ -156,7 +150,7 @@ const AddTransaction = ({navigation, route}) => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
         <Card style={{paddingHorizontal: 10}}>
-          <Card.Title>{item ? 'Update ' : 'Add New'} Transaction</Card.Title>
+          <Card.Title>Add New Transaction</Card.Title>
           <View>
             <TextInput
               value={inputs.title}
@@ -248,7 +242,7 @@ const AddTransaction = ({navigation, route}) => {
           }}
         />
         <View style={styles.center}>
-          <Button title={item ? 'Update' : 'Add'} onPress={validate} />
+          <Button title={'Add'} onPress={validate} />
           <Button title={'Reset'} mode="outlined" onPress={handleReset} />
         </View>
 

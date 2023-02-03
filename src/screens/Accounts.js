@@ -6,6 +6,9 @@ import AppLayout from '../layout/AppLayout';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../styles';
 import Text from '../components/atoms/Text';
+import {useContext} from 'react';
+import {UserContext} from '../context/UserContext';
+import Loader from '../components/atoms/Loader';
 
 const data = [
   {
@@ -24,7 +27,7 @@ const data = [
   },
   {
     title: 'ICICI Credit Card ',
-    desc: 'xxxx xxxx xxxx 4567',
+    desc: '4567',
     amount: 4590,
     vendor: 'card',
   },
@@ -37,12 +40,14 @@ const data = [
   },
 ];
 const Accounts = ({navigation}) => {
+  const {accounts, deleteAccount} = useContext(UserContext);
+
   return (
     <AppLayout>
       <Card>
         <Card.Title beforeColor={colors.YELLOW_LIGHT}>All Accounts</Card.Title>
 
-        {data.map((item, index) => (
+        {accounts.map((item, index) => (
           <TransItem
             item={item}
             key={index}
@@ -50,9 +55,9 @@ const Accounts = ({navigation}) => {
             index={index}
             prefix={true}
             onClick={() => {
-              //console.log("Pressed", item, index);
-              deleteItem({item, index});
+              navigation.navigate('AddAccount', item);
             }}
+            onDelete={() => deleteAccount(item)}
           />
         ))}
       </Card>
@@ -68,11 +73,7 @@ const Accounts = ({navigation}) => {
             backgroundColor: colors.BLACK_3,
             borderRadius: 50,
           }}
-          onPress={() =>
-            navigation.navigate('Modal', {
-              message: 'Want to add bank account',
-            })
-          }>
+          onPress={() => navigation.navigate('AddAccount')}>
           <Icon name="plus-circle" size={30} color={colors.GREEN_DARK} />
         </TouchableOpacity>
       </View>

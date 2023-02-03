@@ -10,9 +10,14 @@ import {colors} from '../../styles';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Dropdown = ({options, onValueChange, label}) => {
+const Dropdown = ({
+  options,
+  onValueChange,
+  defaultValue = options[0],
+  label,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOption, setSelectedOption] = useState(defaultValue);
   const [animation] = useState(new Animated.Value(0));
 
   const toggleDropdown = () => {
