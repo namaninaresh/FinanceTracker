@@ -15,6 +15,7 @@ import Dropdown from '../components/atoms/Dropdown';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
 import Chip from '../components/molecules/Chip';
+import FAB from '../components/molecules/Fab';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
@@ -183,6 +184,7 @@ const AllTransactions = ({navigation}) => {
           })} 
         </ScrollView>*/}
       </Card>
+      <FAB />
     </AppLayout>
   );
 };

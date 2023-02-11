@@ -14,9 +14,8 @@ import {useContext} from 'react';
 import {UserContext} from '../../context/UserContext';
 
 const Dashboard = props => {
-  const {totalExpense} = useContext(UserContext);
+  const {totalExpense, accounts} = useContext(UserContext);
 
-  console.log('tootle', totalExpense);
   const navigation = useNavigation();
   return (
     <Card>
@@ -43,34 +42,28 @@ const Dashboard = props => {
           <Text style={{color: colors.WHITE}}>EXPENSES</Text>
           <Text style={styles.totalCost}>{MoneyFormat(totalExpense)}</Text>
         </TouchableOpacity>
-        <View
-          style={{
-            marginVertical: 20,
-            marginHorizontal: 10,
-            backgroundColor: 'rgba(177, 229, 252, 0.1)',
-            height: 100,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 10,
-            width: 200,
-          }}>
-          <Text style={{color: colors.WHITE}}>BALANCE</Text>
-          <Text style={styles.totalCost}>{MoneyFormat(650000)} </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: 20,
-            marginHorizontal: 10,
-            backgroundColor: 'rgba(167, 170, 247, 0.15)',
-            height: 100,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 10,
-            width: 200,
-          }}>
-          <Text style={{color: colors.WHITE}}>CARDS</Text>
-          <Text style={styles.totalCost}>{MoneyFormat(20000)}</Text>
-        </View>
+
+        {accounts.map((account, index) => {
+          return (
+            <View
+              key={index}
+              style={{
+                marginVertical: 20,
+                marginHorizontal: 10,
+                backgroundColor: 'rgba(177, 229, 252, 0.1)',
+                height: 100,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+                width: 200,
+              }}>
+              <Text style={{color: colors.WHITE}}>{account.title}</Text>
+              <Text style={styles.totalCost}>
+                {MoneyFormat(account.amount)}
+              </Text>
+            </View>
+          );
+        })}
       </ScrollView>
     </Card>
   );

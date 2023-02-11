@@ -10,6 +10,7 @@ import AddTransaction from '../screens/AddTransaction';
 import Notifications from '../screens/Notifications';
 import Profile from '../screens/Profile';
 import Search from '../screens/Search';
+import FAB from '../components/molecules/Fab';
 const Tab = createBottomTabNavigator();
 const items = [
   {
@@ -21,13 +22,6 @@ const items = [
     name: 'Search',
     component: Search,
     iconName: 'magnify',
-  },
-  {
-    name: 'addTransaction',
-    component: AddTransaction,
-    iconName: 'plus-circle',
-    iconColor: colors.ORANGE_DARK,
-    iconSize: 30,
   },
   {
     name: 'Notifications',

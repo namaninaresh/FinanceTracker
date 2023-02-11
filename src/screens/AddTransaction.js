@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Alert,
   Keyboard,
@@ -24,15 +24,20 @@ import CustomPicker from '../components/molecules/CustomPicker';
 const AddTransaction = ({navigation, route}) => {
   // const navigation = useNavigation();
   const item = route.params;
-  console.log('add', item);
-  const {addTransaction, updateTransaction, accounts} = useContext(UserContext);
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: route.params ? 'Update Transaction' : 'Add Transaction',
+    });
+  }, []);
 
+  const {addTransaction, updateTransaction, accounts} = useContext(UserContext);
   const [inputs, setInputs] = useState(
     item
       ? item
       : {
           title: '',
           amount: 0,
+          accountId: null,
           desc: '',
           date: new Date(),
           dateTimeText: {
@@ -63,7 +68,7 @@ const AddTransaction = ({navigation, route}) => {
       handleError('Please enter title', 'title');
       valid = false;
     }
-    if (!inputs.amount | (Number(inputs.amount) === 0)) {
+    if (!inputs.amount | (parseFloat(inputs.amount) === 0)) {
       handleError('Please enter amount', 'amount');
       valid = false;
     }
@@ -80,11 +85,16 @@ const AddTransaction = ({navigation, route}) => {
     setLoading(true);
     setTimeout(async () => {
       setLoading(false);
-      item ? updateTransaction(inputs) : addTransaction(inputs);
+      try {
+        item ? updateTransaction(inputs) : addTransaction(inputs);
+      } catch (error) {
+        console.log('error', error);
+      }
       setInputs({
         title: '',
         amount: 0,
         desc: '',
+        accountId: null,
         date: new Date(),
         dateTimeText: {
           date: null,
@@ -168,18 +178,33 @@ const AddTransaction = ({navigation, route}) => {
               }}
               onChangeText={text => handleChange(text, 'title')}
             />
-            <TextInput
-              value={inputs.amount}
-              inputMode="numeric"
-              label={'Amount'}
-              error={errors.amount}
-              keyboardType="numeric"
-              iconName="cash"
-              onFocus={() => {
-                handleError(null, 'amount');
-              }}
-              onChangeText={text => handleChange(text, 'amount')}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 0,
+                margin: 0,
+              }}>
+              <TextInput
+                value={inputs.amount}
+                inputMode="numeric"
+                label={'Amount'}
+                error={errors.amount}
+                keyboardType="numeric"
+                iconName="cash"
+                onFocus={() => {
+                  handleError(null, 'amount');
+                }}
+                style={{width: '50%', marginRight: 10}}
+                onChangeText={text => handleChange(text, 'amount')}
+              />
+              <CustomPicker
+                items={accounts}
+                selected={item && item.accountId}
+                onValueChange={text => handleChange(text, 'accountId')}
+              />
+            </View>
             <TextInput
               value={inputs.desc}
               multiline={true}
@@ -241,12 +266,7 @@ const AddTransaction = ({navigation, route}) => {
             </View>
           </View>
         </Card>
-        <CustomPicker
-          items={accounts}
-          onValueChange={text => {
-            console.log(text);
-          }}
-        />
+
         <View style={styles.center}>
           <Button title={item ? 'Update' : 'Add'} onPress={validate} />
           <Button title={'Reset'} mode="outlined" onPress={handleReset} />

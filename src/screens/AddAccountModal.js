@@ -1,4 +1,11 @@
-import {Animated, View, Pressable, StyleSheet, Keyboard} from 'react-native';
+import {
+  Animated,
+  View,
+  Pressable,
+  StyleSheet,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {useCardAnimation} from '@react-navigation/stack';
 
@@ -51,7 +58,7 @@ export default function AddAccountModal({navigation, route}) {
       handleError('Please enter title', 'title');
       valid = false;
     }
-    if (!inputs.amount | (Number(inputs.amount) === 0)) {
+    if (!inputs.amount | (parseFloat(inputs.amount) === 0)) {
       handleError('Please enter amount', 'amount');
       valid = false;
     }
@@ -102,69 +109,73 @@ export default function AddAccountModal({navigation, route}) {
       {loading ? (
         <Loader />
       ) : (
-        <Card>
-          <Card.Title beforeColor={colors.YELLOW_LIGHT}>
-            {route.params ? 'Update' : 'Add New'} Account
-          </Card.Title>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}>
+          <Card>
+            <Card.Title beforeColor={colors.YELLOW_LIGHT}>
+              {route.params ? 'Update' : 'Add New'} Account
+            </Card.Title>
 
-          <TextInput
-            value={inputs.title}
-            multiline={true}
-            label={'Account Name'}
-            error={errors.title}
-            onFocus={() => {
-              handleError(null, 'title');
-            }}
-            onChangeText={text => handleChange(text, 'title')}
-            iconName="bank"
-            style={{width: '100%'}}
-          />
-          <TextInput
-            value={inputs.amount}
-            inputMode="numeric"
-            label={'Amount'}
-            error={errors.amount}
-            keyboardType="numeric"
-            iconName="cash"
-            onFocus={() => {
-              handleError(null, 'amount');
-            }}
-            onChangeText={text => handleChange(text, 'amount')}
-          />
-          <TextInput
-            value={inputs.desc}
-            multiline={true}
-            label={'Account/Card Number last 4 digits'}
-            error={errors.desc}
-            onFocus={() => {
-              handleError(null, 'desc');
-            }}
-            onChangeText={text => handleChange(text, 'desc')}
-            iconName="credit-card-outline"
-            style={{width: '100%'}}
-          />
+            <TextInput
+              value={inputs.title}
+              multiline={true}
+              label={'Account Name'}
+              error={errors.title}
+              onFocus={() => {
+                handleError(null, 'title');
+              }}
+              onChangeText={text => handleChange(text, 'title')}
+              iconName="bank"
+              style={{width: '100%'}}
+            />
+            <TextInput
+              value={inputs.amount}
+              inputMode="numeric"
+              label={'Amount'}
+              error={errors.amount}
+              keyboardType="numeric"
+              iconName="cash"
+              onFocus={() => {
+                handleError(null, 'amount');
+              }}
+              onChangeText={text => handleChange(text, 'amount')}
+            />
+            <TextInput
+              value={inputs.desc}
+              multiline={true}
+              label={'Account/Card Number last 4 digits'}
+              error={errors.desc}
+              onFocus={() => {
+                handleError(null, 'desc');
+              }}
+              onChangeText={text => handleChange(text, 'desc')}
+              iconName="credit-card-outline"
+              style={{width: '100%'}}
+            />
 
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-            }}>
-            <Dropdown
-              options={options}
-              defaultValue={inputs.vendor}
-              onValueChange={text => handleChange(text, 'vendor')}
-            />
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <Button
-              title={route.params ? 'Save' : 'Add'}
-              onPress={() => validate()}
-            />
-            <Button title={'Reset'} mode="outlined" onPress={handleReset} />
-          </View>
-        </Card>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Dropdown
+                options={options}
+                defaultValue={inputs.vendor}
+                onValueChange={text => handleChange(text, 'vendor')}
+              />
+            </View>
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <Button
+                title={route.params ? 'Save' : 'Add'}
+                onPress={() => validate()}
+              />
+              <Button title={'Reset'} mode="outlined" onPress={handleReset} />
+            </View>
+          </Card>
+        </ScrollView>
       )}
     </AppLayout>
   );

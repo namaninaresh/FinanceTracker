@@ -48,9 +48,6 @@ const data = [
 ];
 
 const Recent = props => {
-  const deleteItem = ({item, index}) => {
-    console.log('delete', item, index);
-  };
   const navigation = useNavigation();
 
   const {transactions, deleteTransaction} = useContext(UserContext);
@@ -104,8 +101,6 @@ const Recent = props => {
             console.log('Failed with this error: ' + fail);
           },
           (count, smsList) => {
-            console.log('Count: ', count);
-            console.log('List: ', smsList);
             var arr = JSON.parse(smsList);
 
             arr.forEach(function (object) {
@@ -122,7 +117,7 @@ const Recent = props => {
           },
         );
       } else {
-        console.log('Camera permission denied');
+        console.log('SMS permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -139,17 +134,19 @@ const Recent = props => {
         Recent
       </Card.Title>
       {transactions.map((item, index) => {
-        return (
-          <TransItem
-            item={item}
-            key={index}
-            index={index}
-            onClick={() => {
-              navigation.navigate('addTransaction', item);
-            }}
-            onDelete={() => deleteTransaction(item)}
-          />
-        );
+        if (index < 4) {
+          return (
+            <TransItem
+              item={item}
+              key={index}
+              index={index}
+              onClick={() => {
+                navigation.navigate('addTransaction', item);
+              }}
+              onDelete={() => deleteTransaction(item)}
+            />
+          );
+        }
       })}
     </Card>
   );

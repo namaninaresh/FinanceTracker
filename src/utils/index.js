@@ -4,7 +4,7 @@ export function separator() {
   return <View></View>;
 }
 export function MoneyFormat(x) {
-  var number = Number(x);
+  var number = parseFloat(x);
   return number.toLocaleString('en-IN', {
     maximumFractionDigits: 2,
     style: 'currency',

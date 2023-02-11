@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, ScrollView, RefreshControl} from 'react-native';
 import Dashboard from '../components/molecules/Dashboard';
+import FAB from '../components/molecules/Fab';
 import Recent from '../components/molecules/Recent';
 import AppLayout from '../layout/AppLayout';
 const Home = props => {
@@ -25,6 +26,7 @@ const Home = props => {
           <Recent />
         </View>
       </ScrollView>
+      <FAB />
     </AppLayout>
   );
 };

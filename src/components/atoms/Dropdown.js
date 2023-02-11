@@ -73,7 +73,6 @@ const Dropdown = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-
     justifyContent: 'center',
     zIndex: 1000,
   },
@@ -96,9 +95,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   optionsContainer: {
-    position: 'absolute',
-    zIndex: 1000,
-    top: 50,
+    position: 'relative',
+    zIndex: 5000,
+    top: 0,
     right: 0,
     backgroundColor: colors.BLACK_4,
     borderColor: colors.BLACK_2,
@@ -107,7 +106,7 @@ const styles = StyleSheet.create({
   option: {
     height: 50,
     padding: 10,
-    zIndex: 1000,
+    zIndex: 2000,
     borderBottomWidth: 0.5,
     borderBottomColor: colors.BLACK_2,
   },

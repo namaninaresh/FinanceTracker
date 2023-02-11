@@ -2,8 +2,15 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
 import {colors} from '../../styles';
 
-const CustomPicker = ({items, onValueChange}) => {
-  const [selectedValue, setSelectedValue] = useState(null);
+const CustomPicker = ({items, onValueChange, style, selected = null}) => {
+  const selectedBank = selected
+    ? items.filter(item => {
+        if (item.id === selected) {
+          return item;
+        }
+      })[0].title
+    : null;
+  const [selectedValue, setSelectedValue] = useState(selectedBank);
   const [showPicker, setShowPicker] = useState(false);
 
   const togglePicker = () => {
@@ -20,14 +27,18 @@ const CustomPicker = ({items, onValueChange}) => {
     <View>
       <TouchableOpacity
         onPress={togglePicker}
-        style={{
-          backgroundColor: colors.BLACK_3,
-          paddingHorizontal: 20,
-          paddingVertical: 5,
-          borderRadius: 10,
-          alignSelf: 'flex-start',
-          overflow: 'hidden',
-        }}>
+        style={[
+          {
+            backgroundColor: colors.BLACK_3,
+            paddingHorizontal: 20,
+            paddingVertical: 15,
+            borderRadius: 10,
+            marginTop: 5,
+            alignSelf: 'flex-start',
+            overflow: 'hidden',
+          },
+          style,
+        ]}>
         <Text style={styles.selectedValueText}>
           {selectedValue ? selectedValue : 'Select Bank'}
         </Text>

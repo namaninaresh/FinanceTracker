@@ -1,6 +1,5 @@
 import {createContext, useEffect, useReducer, useState} from 'react';
 import SmsAndroid from 'react-native-get-sms-android';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PermissionsAndroid} from 'react-native';
 import UserReducer, {
   ADD_ACCOUNT,
@@ -8,13 +7,17 @@ import UserReducer, {
   DELETE_ACCOUNT,
   DELETE_TRANSACTION,
   initialState,
+  INITIAL_STATE,
   UPDATE_ACCOUNT,
   UPDATE_TRANSACTION,
 } from './UserReducer';
+import {useNavigation} from '@react-navigation/native';
+import {getInitialData, updateAsyncStorage} from '../store/StoreAsync';
 
 export const UserContext = createContext(initialState);
 
 const UserContextProvider = ({children}) => {
+  const navigation = useNavigation();
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
   const addTransaction = transaction => {
@@ -118,6 +121,15 @@ const UserContextProvider = ({children}) => {
   useEffect(() => {
     // getLastWorkingDay();
     // requestSmsPermission();
+
+    getInitialData()
+      .then(res =>
+        dispatch({
+          type: INITIAL_STATE,
+          payload: res,
+        }),
+      )
+      .catch(er => console.log('ere', er));
   }, []);
 
   return (
