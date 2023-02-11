@@ -7,6 +7,7 @@ import Badge from '../components/molecules/Badge';
 import SmsAndroid from 'react-native-get-sms-android';
 import {useEffect} from 'react';
 import Chip from '../components/molecules/Chip';
+import TextInputAnim from '../components/molecules/TextInputAnim';
 const Search = props => {
   var filter = {
     box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -89,6 +90,7 @@ const Search = props => {
     <AppLayout style={{backgroundColor: '#000'}}>
       <View style={styles.container}>
         <Text>Search </Text>
+
         <Chip size="medium" label={'medium'} />
         <Chip size="small" label={'small'} />
 
@@ -111,6 +113,11 @@ const Search = props => {
           label={'war'}
           icon={'account'}
           onDelete={() => {}}
+        />
+        <TextInputAnim
+          label={'Username'}
+          iconName="account"
+          onChangeText={() => {}}
         />
         <Chip
           label={'warning-o'}
