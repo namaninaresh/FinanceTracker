@@ -25,28 +25,28 @@ const data = [
     title: 'item 1',
     desc: 'item 1 descripion',
     amount: 24,
-    type: 'expense',
+    type: 'debited',
     date: new Date(),
   },
   {
     title: 'item 2',
     desc: 'item 3 descripion',
     amount: 290,
-    type: 'income',
+    type: 'credited',
     date: new Date(),
   },
   {
     title: 'item 3',
     desc: 'item 3 descripion',
     amount: 50,
-    type: 'expense',
+    type: 'debited',
     date: new Date(),
   },
   {
     title: 'Last Item',
     desc: 'Last Item desc',
     amount: 50,
-    type: 'expense',
+    type: 'debited',
     date: new Date(),
   },
 ];
@@ -58,7 +58,10 @@ const AllTransactions = ({navigation}) => {
 
   const {transactions, deleteTransaction} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
-
+  const sortedTransactions = transactions.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
+  console.log('sorted', sortedTransactions);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -145,7 +148,7 @@ const AllTransactions = ({navigation}) => {
 
       <Card>
         <FlatList
-          data={transactions}
+          data={sortedTransactions}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}

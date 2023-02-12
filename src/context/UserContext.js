@@ -142,6 +142,7 @@ const UserContextProvider = ({children}) => {
         deleteAccount,
         updateTransaction,
         deleteTransaction,
+        readSMSIDs: state.readSMSIDs,
         totalExpense: state.totalExpense,
         accounts: state.accounts,
       }}>

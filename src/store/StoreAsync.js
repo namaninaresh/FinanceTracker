@@ -11,6 +11,7 @@ const getInitialData = async () => {
       transactions: [],
       totalExpense: 0,
       accounts: [],
+      readSMSIDs: [],
     };
   } catch (error) {
     console.error(error);

@@ -79,7 +79,7 @@ export default function AddAccountModal({navigation, route}) {
         ? updateAccount(inputs)
         : addAccount({
             ...inputs,
-            type: inputs.vendor === 'bank' ? 'income' : 'expense',
+            type: inputs.vendor === 'bank' ? 'credited' : 'debited',
           });
 
       // addTransaction(inputs);

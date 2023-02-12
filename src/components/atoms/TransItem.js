@@ -31,8 +31,8 @@ const PrefixIcon = ({iconName = 'bank'}) => {
 
 const TransItem = ({item, index, onClick, prefix = false, style, onDelete}) => {
   const navigation = useNavigation();
-  let {type = 'expense', title, desc = null, amount = 0, date, vendor} = item;
-  let rupeeColor = type === 'expense' ? colors.ORANGE_DARK : colors.GREEN_DARK;
+  let {type = 'debited', title, desc = null, amount = 0, date, vendor} = item;
+  let rupeeColor = type === 'debited' ? colors.ORANGE_DARK : colors.GREEN_DARK;
   const closeRow = index => {
     if (prevOpenedRow && prevOpenedRow !== row[index]) {
       prevOpenedRow.close();

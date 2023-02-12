@@ -28,7 +28,7 @@ const data = [
     title: 'sample 2',
     desc: 'some sample2',
     amount: 10,
-    type: 'expense',
+    type: 'debited',
     date: new Date(),
   },
   {
@@ -42,7 +42,7 @@ const data = [
     title: 'sample 2',
     desc: 'some sample2',
     amount: 10,
-    type: 'expense',
+    type: 'debited',
     date: new Date(),
   },
 ];
@@ -78,6 +78,9 @@ const Recent = props => {
     indexFrom: 0, // start from index 0
     maxCount: 10, // count of SMS to return each time
   };
+  const sortedTransactions = transactions.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
 
   const requestSmsPermission = async () => {
     const tempItems = [];
@@ -133,7 +136,7 @@ const Recent = props => {
       <Card.Title beforeColor={colors.VOILET_LIGHT} navigate="All Transactions">
         Recent
       </Card.Title>
-      {transactions.map((item, index) => {
+      {sortedTransactions.map((item, index) => {
         if (index < 4) {
           return (
             <TransItem

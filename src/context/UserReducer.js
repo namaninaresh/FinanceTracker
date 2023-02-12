@@ -15,6 +15,7 @@ export const initialState = {
   transactions: [],
   totalExpense: 0,
   accounts: [],
+  readSMSIDs: [],
 };
 
 export const initialStates = {
@@ -23,7 +24,7 @@ export const initialStates = {
       id: 1,
       title: 'Test 1',
       amount: 1000,
-      type: 'expense',
+      type: 'debited',
       desc: 'Test sampel',
       date: new Date(),
       accountId: 1,
@@ -36,7 +37,7 @@ export const initialStates = {
       id: 2,
       title: 'Test 2',
       amount: 200,
-      type: 'income',
+      type: 'credited',
       desc: 'Test sampel',
       date: new Date(),
       accountId: 1,
@@ -49,7 +50,7 @@ export const initialStates = {
       id: 3,
       title: 'Test 3',
       amount: 40,
-      type: 'expense',
+      type: 'debited',
       desc: 'Test sampel',
       date: new Date(),
       accountId: 1,
@@ -62,7 +63,7 @@ export const initialStates = {
       id: 4,
       title: 'Test 4',
       amount: 90,
-      type: 'income',
+      type: 'credited',
       desc: 'Test sampel',
       date: new Date(),
       accountId: 1,
@@ -116,29 +117,47 @@ export default UserReducer = (state = initialState, action) => {
     case ADD_TRANSACTION: {
       var temp = {
         ...state,
-        totalExpense:
-          parseFloat(action.payload.amount) + parseFloat(state.totalExpense),
+        readSMSIDs: [...state.readSMSIDs, action.payload.smsId],
         transactions: [
           ...state.transactions,
           {...action.payload, id: generateUniqueId(action.payload.title)},
         ],
         accounts: state.accounts.map(account => {
           if (account.id === action.payload.accountId) {
-            if (
-              parseFloat(account.amount) >= parseFloat(action.payload.amount)
-            ) {
+            if (action.payload.type === 'debited') {
+              if (
+                parseFloat(account.amount) >= parseFloat(action.payload.amount)
+              ) {
+                return {
+                  ...account,
+                  amount:
+                    parseFloat(account.amount) -
+                    parseFloat(action.payload.amount),
+                };
+              } else {
+                console.log('errors', account.amount, action.payload.amount);
+                //throw new Error('Insufficient balance');
+              }
+            } else if (action.payload.type === 'credited') {
               return {
                 ...account,
-                amount: account.amount - action.payload.amount,
+                amount:
+                  parseFloat(account.amount) +
+                  parseFloat(action.payload.amount),
               };
-            } else {
-              console.log('errors', account.amount, action.payload.amount);
-              //throw new Error('Insufficient balance');
             }
           }
           return account;
         }),
       };
+      if (action.payload.type === 'debited') {
+        temp = {
+          ...temp,
+          totalExpense:
+            parseFloat(action.payload.amount) + parseFloat(state.totalExpense),
+        };
+      }
+      // console.log('ad', temp);
       updateAsyncStorage(temp);
       return temp;
     }
