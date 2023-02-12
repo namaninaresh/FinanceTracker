@@ -11,6 +11,9 @@ export function MoneyFormat(x) {
     currency: 'INR',
   });
 }
+export function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 export function dateFormatters(timestamp) {
   //const timestamp = "2023-01-26T13:34:08.649Z";

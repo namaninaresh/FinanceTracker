@@ -21,6 +21,8 @@ import {UserContext} from '../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import CustomPicker from '../components/molecules/CustomPicker';
 
+import Picker from '../components/molecules/Picker';
+
 const AddTransaction = ({navigation, route}) => {
   // const navigation = useNavigation();
   const item = route.params;
@@ -39,6 +41,7 @@ const AddTransaction = ({navigation, route}) => {
           amount: 0,
           accountId: null,
           desc: '',
+          type: 'debited',
           date: new Date(),
           dateTimeText: {
             date: null,
@@ -205,10 +208,18 @@ const AddTransaction = ({navigation, route}) => {
                 onValueChange={text => handleChange(text, 'accountId')}
               />
             </View>
+
+            <View>
+              <Picker
+                options={['debited', 'credited', 'bill']}
+                selectedValue={inputs.type}
+                onValueChange={text => handleChange(text, 'type')}
+              />
+            </View>
             <TextInput
               value={inputs.desc}
               multiline={true}
-              label={'desc'}
+              label={'Desc'}
               error={errors.desc}
               onFocus={() => {
                 handleError(null, 'desc');
@@ -296,6 +307,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  picker: {
+    height: 50,
+    width: 100,
+    color: '#34495e',
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    borderRadius: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
 
