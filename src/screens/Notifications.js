@@ -22,7 +22,13 @@ import FAB from '../components/molecules/Fab';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
-import {generateUniqueId} from '../utils';
+import {
+  generateUniqueId,
+  getLastWorkingDay,
+  getLastWorkingDay2,
+  isFakeSms,
+  sortedTransactionsByDate,
+} from '../utils';
 import {useNavigation} from '@react-navigation/native';
 
 const Notifications = props => {
@@ -38,7 +44,7 @@ const Notifications = props => {
      *    "SELECT * from messages WHERE (other filters) AND date <= maxDate"
      *    - Same for minDate but with "date >= minDate"
      */
-    //minDate: 1554636310165, // timestamp (in milliseconds since UNIX epoch)
+    minDate: 1675103400000, // timestamp (in milliseconds since UNIX epoch)
     //maxDate: 1556277910456, // timestamp (in milliseconds since UNIX epoch)
     //bodyRegex: '(.*)How are you(.*)', // content regex to match
 
@@ -58,11 +64,16 @@ const Notifications = props => {
     transactions,
     deleteTransaction,
     addTransaction,
+    addAccount,
     accounts,
+    addMultipleTransaction,
     readSMSIDs,
+    lastReadTimeStamp,
   } = useContext(UserContext);
+
   const [newtrans, settrans] = useState([]);
-  const requestCameraPermission = async () => {
+
+  const readSmsList = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_SMS,
@@ -83,89 +94,106 @@ const Notifications = props => {
             console.log('Failed with this error: ' + fail);
           },
           (count, smsList) => {
-            // console.log('Count: ', count);
-            //console.log('List: ', smsList);
+            console.warn('count', count);
             var arr = JSON.parse(smsList);
+
+            // console.info('sord=>', sortedTransactionsByDate(smsList));
+
             let temp = [];
+            let bankAccounts = accounts;
+
             arr.forEach(function (object) {
               if (readSMSIDs.includes(object._id)) {
                 console.log('message alread read !@');
               } else {
-                let title = object.body.toString();
-                let description = object.body;
-                let amount = 0.0;
-                let type = '';
-                let date = '';
-                let cardNumber = '';
-                let accountId = '';
-                var words = object.body.split(' ');
+                if (!isFakeSms(object.body.toString())) {
+                  let title = object.body.toString();
+                  let description = object.body;
+                  let amount = 0.0;
+                  let type = '';
+                  let date = '';
+                  let cardNumber = '';
+                  let accountId = '';
 
-                // if (description.includes('debited')) {
-                //   title = description.match(/debited for.*?(\w+)/)[1];
-                // } else {
-                //   title = description.match(/spent on.*?at (\w+)/)[1];
-                // }
-                // Extract the amount
-                let amountMatch = description.match(/(Rs|INR)\s(\d+\.\d+)/);
-                if (amountMatch) {
-                  //            console.log('amout', amountMatch[0]);
-                  amount = parseFloat(
-                    amountMatch[0].substring(amountMatch[0].indexOf(' ') + 1),
+                  var words = object.body.split(' ');
+
+                  // if (description.includes('debited')) {
+                  //   title = description.match(/debited for.*?(\w+)/)[1];
+                  // } else {
+                  //   title = description.match(/spent on.*?at (\w+)/)[1];
+                  // }
+                  // Extract the amount
+                  let amountMatch = description.match(
+                    /(Rs|INR)\s([\d,]+(\.\d+)?)/,
                   );
-                }
-
-                // Extract the date
-                let dateMatch = description.match(/(\d{2}-\w{3}-\d{2})/);
-                if (dateMatch) {
-                  date = dateMatch[0];
-                }
-
-                // Extract the last 4 digits of the card
-                //let cardNumberMatch = description.match(/XX\d{4}/);
-
-                let cardNumberMatch = description.match(/XX\d+/);
-                if (cardNumberMatch) {
-                  cardNumber = cardNumberMatch[0].substring(
-                    2,
-                    cardNumberMatch[0].length,
-                  );
-                }
-                // if (cardNumberMatch) {
-                //             cardLastFourDigits = cardNumberMatch[0].substr(-4);
-                //           }
-
-                // Extract the type
-                let typeMatch = description.match(/debited|credited|spent/);
-                if (typeMatch) {
-                  type = typeMatch[0];
-                  if (type == 'spent') type = 'debited';
-                  if (type == 'recieved') type = 'credited';
-                }
-                accounts.map(item => {
-                  if (item.desc.includes(cardNumber)) {
-                    accountId = item.id;
+                  if (amountMatch) {
+                    amount = parseFloat(amountMatch[2].replace(/,/g, ''));
                   }
-                });
-                addTransaction({
-                  title: title,
-                  desc: description,
-                  amount: amount,
-                  type: type,
-                  smsId: object._id,
-                  date: new Date(object.date_sent),
-                  accountId: accountId,
-                  dateTimeText: {
-                    date: null,
-                    time: null,
-                  },
-                });
+
+                  // Extract the date
+                  let dateMatch = description.match(/(\d{2}-\w{3}-\d{2})/);
+                  if (dateMatch) {
+                    date = dateMatch[0];
+                  }
+
+                  // Extract the last 4 digits of the card
+                  //let cardNumberMatch = description.match(/XX\d{4}/);
+
+                  let cardNumberMatch = description.match(/XX\d+/);
+                  if (cardNumberMatch) {
+                    cardNumber = cardNumberMatch[0].substring(
+                      2,
+                      cardNumberMatch[0].length,
+                    );
+                  }
+                  // if (cardNumberMatch) {
+                  //             cardLastFourDigits = cardNumberMatch[0].substr(-4);
+                  //           }
+
+                  // Extract the type
+                  let typeMatch = description.match(/debited|credited|spent/);
+                  if (typeMatch) {
+                    type = typeMatch[0];
+                    if (type == 'spent') type = 'debited';
+                    if (type == 'recieved') type = 'credited';
+                  }
+
+                  temp.push({
+                    title: title,
+                    desc: description,
+                    amount: amount,
+                    type: type,
+                    smsId: object._id,
+                    date: new Date(object.date),
+                    accountId: cardNumber,
+                    dateTimeText: {
+                      date: null,
+                      time: null,
+                    },
+                  });
+                  /* addTransaction({
+                    title: title,
+                    desc: description,
+                    amount: amount,
+                    type: type,
+                    smsId: object._id,
+                    date: new Date(object.date_sent),
+                    accountId: accountId,
+                    dateTimeText: {
+                      date: null,
+                      time: null,
+                    }, 
+                  }); */
+                }
               }
             });
-            settrans(temp);
+            //console.log('bankacc', bankAccounts);
+            if (temp.length > 0) addMultipleTransaction(temp);
+            //settrans(temp);
           },
         );
       } else {
-        console.log('Camera permission denied');
+        console.log('Sms permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -173,7 +201,8 @@ const Notifications = props => {
   };
 
   useEffect(() => {
-    requestCameraPermission();
+    getLastWorkingDay();
+    readSmsList();
   }, []);
   const [filterSelected, setFilters] = useState([]);
   const deleteItem = ({item, index}) => {

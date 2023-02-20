@@ -19,6 +19,7 @@ import FAB from '../components/molecules/Fab';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
+import {sortedTransactionsByDate} from '../utils';
 
 const data = [
   {
@@ -58,10 +59,8 @@ const AllTransactions = ({navigation}) => {
 
   const {transactions, deleteTransaction} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
-  const sortedTransactions = transactions.sort((a, b) => {
-    return new Date(b.date) - new Date(a.date);
-  });
-  console.log('sorted', sortedTransactions);
+  const sortedTransactions = sortedTransactionsByDate(transactions);
+  //console.log('sorted', sortedTransactions);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {

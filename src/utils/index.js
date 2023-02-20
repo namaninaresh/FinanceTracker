@@ -120,7 +120,7 @@ export function getLastWorkingDay() {
     0,
   );
 
-  console.log('lastmont', currentDate, lastMonth);
+  //console.log('lastmont', currentDate, lastMonth);
   // Get the day of the week for the last day of the last month (0 - Sunday, 1 - Monday, etc.)
   var lastDayOfWeek = lastMonth.getDay();
 
@@ -135,12 +135,13 @@ export function getLastWorkingDay() {
       lastMonth.setDate(lastMonth.getDate() - 1);
     }
   }
-
+  //lastMonth.setHours(0, 0, 0, 0);
   // Format the last working day of the last month for display
   var lastWorkingDay = lastMonth.toLocaleDateString();
-  console.log('Last working day of last month: ' + lastWorkingDay);
+  //console.log('Last working day of last month: ' + lastWorkingDay);
 
   var lastWorkingDayTimestamp = lastMonth.getTime() / 1000;
+  //console.log('las work day', lastWorkingDayTimestamp);
   return lastWorkingDayTimestamp;
   /*var currentDate = new Date();
 
@@ -166,7 +167,32 @@ export function getLastWorkingDay() {
   return lastDayOfLastMonth; */
 }
 
+export function getCurrentTimeUnix() {
+  const currentTime = Math.floor(Date.now() / 1000);
+  return currentTime;
+}
 export const generateUniqueId = title => {
   const timestamp = new Date().getTime().toString();
   return `${title}-${timestamp}`;
+};
+
+export const sortedTransactionsByDate = transations => {
+  const sorted = transations.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  return sorted;
+};
+
+export const sortedTransactionsOld = transations => {
+  const sorted = transations.sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
+
+  return sorted;
+};
+
+export const isFakeSms = message => {
+  const fakeSmsPattern = /claim|fake|prize|winner|congratulations|spam/i;
+  return fakeSmsPattern.test(message);
 };

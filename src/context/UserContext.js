@@ -3,6 +3,7 @@ import SmsAndroid from 'react-native-get-sms-android';
 import {PermissionsAndroid} from 'react-native';
 import UserReducer, {
   ADD_ACCOUNT,
+  ADD_MULTIPLE_TRANSACTION,
   ADD_TRANSACTION,
   DELETE_ACCOUNT,
   DELETE_TRANSACTION,
@@ -24,6 +25,12 @@ const UserContextProvider = ({children}) => {
     dispatch({
       type: ADD_TRANSACTION,
       payload: transaction,
+    });
+  };
+  const addMultipleTransaction = transactions => {
+    dispatch({
+      type: ADD_MULTIPLE_TRANSACTION,
+      payload: transactions,
     });
   };
   const updateTransaction = transaction => {
@@ -140,11 +147,13 @@ const UserContextProvider = ({children}) => {
         addAccount,
         updateAccount,
         deleteAccount,
+        addMultipleTransaction,
         updateTransaction,
         deleteTransaction,
         readSMSIDs: state.readSMSIDs,
         totalExpense: state.totalExpense,
         accounts: state.accounts,
+        lastReadTimeStamp: state.lastReadTimeStamp,
       }}>
       {children}
     </UserContext.Provider>

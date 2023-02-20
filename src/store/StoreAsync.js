@@ -3,7 +3,7 @@ const ASYNC_STORAGE_KEY = '@initialState';
 const getInitialData = async () => {
   try {
     const data = await AsyncStorage.getItem(ASYNC_STORAGE_KEY);
-    console.log('est', data);
+    //console.log('est', data);
     if (data !== null) {
       return {...JSON.parse(data)};
     }
@@ -12,6 +12,7 @@ const getInitialData = async () => {
       totalExpense: 0,
       accounts: [],
       readSMSIDs: [],
+      lastReadTimeStamp: 0,
     };
   } catch (error) {
     console.error(error);
@@ -19,6 +20,7 @@ const getInitialData = async () => {
 };
 
 const updateAsyncStorage = async data => {
+  console.log('asyn updated called');
   try {
     await AsyncStorage.setItem(ASYNC_STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
