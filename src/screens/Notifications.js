@@ -56,7 +56,7 @@ const Notifications = props => {
     //body: 'How are you', // content to match
     /** the next 2 filters can be used for pagination **/
     indexFrom: 0, // start from index 0
-    bodyRegex: '(.*)(credited|debited|spent|recieved)(.*)',
+    bodyRegex: '(.*)(credited|debited|spent|recieved|Balance|sent|paid)(.*)',
     // count of SMS to return each time
   };
 
@@ -94,7 +94,7 @@ const Notifications = props => {
             console.log('Failed with this error: ' + fail);
           },
           (count, smsList) => {
-            console.warn('count', count);
+            //console.warn('count', count);
             var arr = JSON.parse(smsList);
 
             // console.info('sord=>', sortedTransactionsByDate(smsList));
@@ -151,10 +151,14 @@ const Notifications = props => {
                   //           }
 
                   // Extract the type
-                  let typeMatch = description.match(/debited|credited|spent/);
+                  let typeMatch = description.match(
+                    /debited|credited|spent|sent|paid|recieved/,
+                  );
                   if (typeMatch) {
                     type = typeMatch[0];
-                    if (type == 'spent') type = 'debited';
+                    console.log('type==', type);
+                    if ((type == 'spent') | (type == 'paid') | (type == 'sent'))
+                      type = 'debited';
                     if (type == 'recieved') type = 'credited';
                   }
 

@@ -125,7 +125,7 @@ const AllTransactions = ({navigation}) => {
 
           {/*<Icon name="filter-variant" size={24} color={'white'} /> */}
         </TouchableOpacity>
-        <Dropdown options={options} onValueChange={onValueChange} />
+        {/*<Dropdown options={options} onValueChange={onValueChange} /> */}
       </View>
       <View>
         <ScrollView
@@ -164,7 +164,7 @@ const AllTransactions = ({navigation}) => {
           )}
           contentContainerStyle={{
             padding: 5,
-            paddingBottom: 20 + (filterSelected.length > 0 && 30),
+            paddingBottom: 100 + (filterSelected.length > 0 && 30),
           }}
         />
 

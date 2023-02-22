@@ -179,92 +179,158 @@ export default UserReducer = (state = initialState, action) => {
       if (Array.isArray(action.payload)) {
         // If it's an array, loop through each item and add the transaction
         action.payload.forEach((transaction, index) => {
-          const regex = new RegExp(transaction.accountId);
+          if (!transaction.desc.includes('Balances for Ac')) {
+            const regex = new RegExp(transaction.accountId);
 
-          //  const sms2AccountType = sms2.match(accountTypeRegex)[0].toLowerCase();
+            //  const sms2AccountType = sms2.match(accountTypeRegex)[0].toLowerCase();
 
-          //  console.log(`card type: ${sms2AccountType}`);
-          let account = accounts.find(
-            account => regex.test(account.id),
-            //account => account.id === transaction.accountId,
-          );
+            if (transaction.desc.includes('PPBL')) {
+              console.log('included', transaction.desc);
+              const regex = /a\/c\s+(\d*[A-Z]+\d+)/i;
+              const accountNumberMatch = transaction.desc.match(regex);
+              const accountNumber = accountNumberMatch
+                ? accountNumberMatch[1]
+                : null;
 
-          if (!account) {
-            // createBankAccount() function should return the newly created account's id
-            //accountId = createBankAccount(cardNumber);
-            let accountId = generateUniqueId(transaction.accountId);
-
-            const accountTypeRegex = /(acct|card|acc)/i; // matches "acct" or "card" (case-insensitive)
-            try {
-              let accountType = transaction.desc
-                .match(accountTypeRegex)[0]
-                .toLowerCase();
-
-              if ((accountType === 'acc') | (accountType === 'acct'))
-                accountType = 'bank';
-              //  const bankName = sms1.match(/^\w+\s+Bank/)[0];
-
-              const newAccount = {
-                id: accountId,
-                title: `${accountType.toUpperCase()} ${transaction.accountId}`,
-                amount:
-                  transaction.type === 'credited' ? 0 : transaction.amount,
-                desc: transaction.accountId,
-                vendor: accountType,
-              };
-              account = newAccount;
-              transaction.accountId = accountId;
-              accounts.push(newAccount);
-            } catch (e) {
-              console.log(e, transaction.desc);
+              // Extracting title
+              let title = '';
+              try {
+                title = transaction.desc.match(/to (.+?) on/i)[1];
+              } catch (error) {
+                title = transaction.desc.match(/to (.+?) from/i)[1];
+              }
+              // Extracting amount
+              const amount = parseFloat(
+                transaction.desc.match(/Rs\.([\d.]+)/i)[1],
+              );
+              transaction.title = title;
+              transaction.amount = amount;
             }
-          }
+            //  console.log(`card type: ${sms2AccountType}`);
+            let account = accounts.find(
+              account => regex.test(account.id),
+              //account => account.id === transaction.accountId,
+            );
+            if (account) transaction.accountId = account.id;
 
-          if (transaction.type === 'debited') {
-            if (account.vendor === 'bank') {
-              if (
-                parseFloat(account.amount) >= parseFloat(transaction.amount)
-              ) {
+            if (!account) {
+              // createBankAccount() function should return the newly created account's id
+              //accountId = createBankAccount(cardNumber);
+              let accountId = generateUniqueId(transaction.accountId);
+
+              const accountTypeRegex = /(acct|card|acc|a\/c)/i; // matches "acct" or "card" (case-insensitive)
+              try {
+                let accountType = transaction.desc
+                  .match(accountTypeRegex)[0]
+                  .toLowerCase();
+
+                if (
+                  (accountType === 'acc') |
+                  (accountType === 'acct') |
+                  (accountType === 'a/c')
+                )
+                  accountType = 'bank';
+                //  const bankName = sms1.match(/^\w+\s+Bank/)[0];
+
+                const newAccount = {
+                  id: accountId,
+                  title: `${accountType.toUpperCase()} ${
+                    transaction.accountId
+                  }`,
+                  amount:
+                    transaction.type === 'credited' ? 0 : transaction.amount,
+                  desc: transaction.accountId,
+                  vendor: accountType,
+                };
+
+                account = newAccount;
+                transaction.accountId = accountId;
+                accounts.push(newAccount);
+              } catch (e) {
+                console.log('**', e, transaction.desc);
+              }
+            }
+
+            if (transaction.type === 'debited') {
+              if (account.vendor === 'bank') {
                 account.amount =
                   parseFloat(account.amount) - parseFloat(transaction.amount);
                 totalExpense =
                   parseFloat(transaction.amount) + parseFloat(totalExpense);
-              } else {
-                console.log('errors', account.amount, transaction.amount);
+
+                /*if (
+                  parseFloat(account.amount) >= parseFloat(transaction.amount)
+                ) {
+                  account.amount =
+                    parseFloat(account.amount) - parseFloat(transaction.amount);
+                  totalExpense =
+                    parseFloat(transaction.amount) + parseFloat(totalExpense);
+                } else {
+                  console.log('errors=', account.amount, transaction.amount);
+                } */
+              }
+              if (account.vendor === 'card') {
+                const availableBalanceRegex =
+                  /Avl\sLmt:\s?INR\s?([\d,]+(?:\.\d+)?)/;
+                const availableBalanceMatch = transaction.desc.match(
+                  availableBalanceRegex,
+                );
+                const avlBalance = availableBalanceMatch
+                  ? availableBalanceMatch[1].replace(/,/g, '')
+                  : null;
+
+                account.amount = avlBalance;
+                totalExpense =
+                  parseFloat(transaction.amount) + parseFloat(totalExpense);
+              }
+            } else if (transaction.type === 'credited') {
+              account.amount =
+                parseFloat(account.amount) + parseFloat(transaction.amount);
+
+              /*return {
+                ...account,
+                amount:
+                  parseFloat(account.amount) + parseFloat(transaction.amount),
+              }; */
+            }
+
+            if (transaction.desc.includes('ATM')) {
+              transaction.title = 'Atm Withdrawal';
+
+              let balRegex = /Avb Bal: INR([\d,]+\.\d{2})/;
+
+              let balanceMatch = transaction.desc.match(balRegex);
+
+              if (balanceMatch) {
+                let balance = parseFloat(balanceMatch[1].replace(',', ''));
+                account.amount = balance;
               }
             }
-            if (account.vendor === 'card') {
-              const availableBalanceRegex =
-                /Avl\sLmt:\s?INR\s?([\d,]+(?:\.\d+)?)/;
-              const availableBalanceMatch = transaction.desc.match(
-                availableBalanceRegex,
-              );
-              const avlBalance = availableBalanceMatch
-                ? availableBalanceMatch[1].replace(/,/g, '')
-                : null;
 
-              console.log('avl balance for card', avlBalance);
-              account.amount = avlBalance;
-              totalExpense =
-                parseFloat(transaction.amount) + parseFloat(totalExpense);
-            }
-          } else if (transaction.type === 'credited') {
-            console.log('amount=', account.amount, transaction.amount);
-            account.amount =
-              parseFloat(account.amount) + parseFloat(transaction.amount);
+            readSMSIDs.push(transaction.smsId);
+            transactions.push({
+              ...transaction,
+              id: generateUniqueId(transaction.title),
+            });
+          } else {
+            const regex = /Ac\s+X{8}(\d+)\s+/;
+            const match = transaction.desc.match(regex);
+            const accountNumber = match ? match[1] : null;
+            // console.log(accountNumber);
 
-            /*return {
-              ...account,
-              amount:
-                parseFloat(account.amount) + parseFloat(transaction.amount),
-            }; */
+            // Extract the balance using regex
+            const balanceMatch = transaction.desc.match(
+              /Avbl\. Bal:\s+INR\s+([\d.]+)/,
+            );
+            const balance = balanceMatch ? parseFloat(balanceMatch[1]) : null;
+            const account = accounts.find(acc =>
+              accountNumber.includes(acc.desc),
+            );
+            if (account) account.amount = balance;
+            //console.log('balance =>', balance, accountNumber);
           }
 
-          readSMSIDs.push(transaction.smsId);
-          transactions.push({
-            ...transaction,
-            id: generateUniqueId(transaction.title),
-          });
+          console.warn('info=', transaction, accounts);
         });
       }
       /*    let totalExpense = state.totalExpense;
@@ -276,6 +342,7 @@ export default UserReducer = (state = initialState, action) => {
       }); */
       //console.log('accounts', accounts);
       // Update the state with the new transactions and accounts
+
       let temp = {
         ...state,
         readSMSIDs,
@@ -302,8 +369,6 @@ export default UserReducer = (state = initialState, action) => {
             account => regex.test(account.id),
             //account => account.id === transaction.accountId,
           );
-
-          console.log('exist', existingAccount, transaction.accountId);
 
           if (!existingAccount) {
             // createBankAccount() function should return the newly created account's id
@@ -356,7 +421,6 @@ export default UserReducer = (state = initialState, action) => {
           });
         });
       }
-      console.log('after accounts', accounts);
       let totalExpense = state.totalExpense;
       action.payload.forEach(transaction => {
         if (transaction.type === 'debited') {

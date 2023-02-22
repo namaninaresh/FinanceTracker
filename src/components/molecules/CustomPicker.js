@@ -3,13 +3,20 @@ import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
 import {colors} from '../../styles';
 
 const CustomPicker = ({items, onValueChange, style, selected = null}) => {
-  const selectedBank = selected
-    ? items.filter(item => {
-        if (item.id === selected) {
-          return item;
-        }
-      })[0].title
-    : null;
+  let selectedBank = null;
+
+  try {
+    selectedBank = selected
+      ? items.filter(item => {
+          if ((item.id = selected)) {
+            return item;
+          }
+        })[0].title
+      : null;
+  } catch (error) {
+    selectedBank = null;
+  }
+
   const [selectedValue, setSelectedValue] = useState(selectedBank);
   const [showPicker, setShowPicker] = useState(false);
 
