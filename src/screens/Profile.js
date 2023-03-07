@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Button from '../components/atoms/Button';
 import AppLayout from '../layout/AppLayout';
+import {clearCache} from '../store/StoreAsync';
 import {colors} from '../styles';
 
 const items = [
@@ -28,17 +29,22 @@ const items = [
   {
     title: 'Debit Loans',
     iconName: 'account-cash',
-    navigation: null,
+    navigation: 'Loans',
   },
   {
     title: 'Credit Loans',
     iconName: 'cash-refund',
-    navigation: null,
+    navigation: 'Loans',
   },
   {
     title: 'Stats',
     iconName: 'chart-line',
     navigation: null,
+  },
+  {
+    title: 'Bills',
+    iconName: 'clipboard-text',
+    navigation: 'Bills',
   },
   {
     title: 'All Transactions',
@@ -53,6 +59,7 @@ const items = [
   {
     title: 'Clear Cache',
     iconName: 'delete-outline',
+    onPress: clearCache,
     navigation: null,
   },
   {
@@ -62,43 +69,48 @@ const items = [
   },
 ];
 
+const ProfileHeader = () => {
+  return (
+    <View style={styles.headerContainer}>
+      <View style={styles.userIconContainer}>
+        <Image
+          source={require('../assets/user.webp')}
+          style={styles.userIcon}
+        />
+      </View>
+      <View>
+        <Text style={[styles.usertitle]}>Chinna Namani</Text>
+        <Text style={styles.userdescription}>lobelychinna@</Text>
+        <Button
+          title={'Edit Profile'}
+          style={{marginHorizontal: 0, marginVertical: 0}}
+          onPress={() => navigation.navigate('EditProfile')}
+          // onPress={() => navigation.navigate('Modal', {message: 'Success'})}
+        />
+        {/*<TouchableOpacity
+      style={styles.editProfilebtn}
+      onPress={() => {
+        navigation.navigate('EditProfile');
+      }}>
+      <Text
+        style={{
+          color: colors.GREEN_DARK,
+          fontWeight: '700',
+        }}>
+        Edit Profile
+      </Text>
+    </TouchableOpacity> */}
+      </View>
+    </View>
+  );
+};
+
 const Profile = props => {
   const navigation = useNavigation();
   return (
     <AppLayout>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View style={styles.userIconContainer}>
-            <Image
-              source={require('../assets/user.webp')}
-              style={styles.userIcon}
-            />
-          </View>
-          <View>
-            <Text style={[styles.usertitle]}>Chinna Namani</Text>
-            <Text style={styles.userdescription}>lobelychinna@</Text>
-            <Button
-              title={'Edit Profile'}
-              style={{marginHorizontal: 0, marginVertical: 0}}
-              onPress={() => navigation.navigate('EditProfile')}
-              // onPress={() => navigation.navigate('Modal', {message: 'Success'})}
-            />
-            {/*<TouchableOpacity
-              style={styles.editProfilebtn}
-              onPress={() => {
-                navigation.navigate('EditProfile');
-              }}>
-              <Text
-                style={{
-                  color: colors.GREEN_DARK,
-                  fontWeight: '700',
-                }}>
-                Edit Profile
-              </Text>
-            </TouchableOpacity> */}
-          </View>
-        </View>
-
+        {/* {<ProfileHeader />} */}
         <ScrollView
           contentContainerStyle={{
             width: '100%',
@@ -114,9 +126,16 @@ const Profile = props => {
                 <TouchableOpacity
                   style={[styles.listItem]}
                   key={index}
-                  onPress={() => {
-                    item.navigation && navigation.navigate(item.navigation);
-                  }}>
+                  onPress={
+                    item.onPress
+                      ? item.onPress
+                      : () => {
+                          item.navigation &&
+                            navigation.navigate(item.navigation, {
+                              page: item.title,
+                            });
+                        }
+                  }>
                   <Icon color={colors.WHITE_2} name={item.iconName} size={20} />
                   <Text style={styles.cardTitle}>{item.title}</Text>
                   <Icon color={colors.WHITE_2} name="chevron-right" size={24} />

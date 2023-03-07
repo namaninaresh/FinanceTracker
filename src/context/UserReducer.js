@@ -166,7 +166,7 @@ export default UserReducer = (state = initialState, action) => {
         };
       }
       // console.log('ad', temp);
-      //updateAsyncStorage(temp);
+      updateAsyncStorage(temp);
       return temp;
     }
     case ADD_MULTIPLE_TRANSACTION: {
@@ -196,7 +196,7 @@ export default UserReducer = (state = initialState, action) => {
             if (account) account.amount = balance;
           } else {
             const smsDetails = smsPatternsVerify(transaction);
-            console.log('sms', smsDetails);
+            //console.log('sms', smsDetails);
             transaction.title = smsDetails && smsDetails.title;
 
             const regex = new RegExp(transaction.accountId);
@@ -308,7 +308,7 @@ export default UserReducer = (state = initialState, action) => {
         totalExpense,
       };
 
-      // updateAsyncStorage(temp);
+      updateAsyncStorage(temp);
       return temp;
     }
     case 'ADD_MULTIPLE_TRANSACTIONs': {
@@ -394,7 +394,7 @@ export default UserReducer = (state = initialState, action) => {
         accounts,
         totalExpense,
       };
-      // updateAsyncStorage(temp);
+      updateAsyncStorage(temp);
       return temp;
     }
 
@@ -564,7 +564,7 @@ export default UserReducer = (state = initialState, action) => {
           parseFloat(state.totalExpense) - parseFloat(action.payload.amount);
       }
 
-      //  updateAsyncStorage(temp);
+      updateAsyncStorage(temp);
       return (temp = {
         ...state,
 
@@ -582,7 +582,7 @@ export default UserReducer = (state = initialState, action) => {
           {...action.payload, id: generateUniqueId(action.payload.title)},
         ],
       };
-      //updateAsyncStorage(temp);
+      updateAsyncStorage(temp);
       return temp;
     case UPDATE_ACCOUNT:
       temp = {

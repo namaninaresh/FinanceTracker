@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
 const ASYNC_STORAGE_KEY = '@initialState';
 const getInitialData = async () => {
   try {
@@ -28,4 +29,15 @@ const updateAsyncStorage = async data => {
   }
 };
 
-export {getInitialData, updateAsyncStorage};
+const clearCache = async () => {
+  try {
+    await AsyncStorage.clear();
+    Alert.alert('Success', 'Cache cleared successfully.');
+    console.log('Cache cleared successfully.');
+  } catch (error) {
+    Alert.alert('Error', 'Unable to clear cache.');
+    console.log('Error clearing cache:', error);
+  }
+};
+
+export {getInitialData, updateAsyncStorage, clearCache};

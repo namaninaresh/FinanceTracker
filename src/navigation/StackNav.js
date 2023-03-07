@@ -15,6 +15,8 @@ import Expenses from '../screens/Expenses';
 import EditTransaction from '../screens/EditTransaction';
 import AddAccountModal from '../screens/AddAccountModal';
 import AddTransaction from '../screens/AddTransaction';
+import Loans from '../screens/Loans';
+import Bills from '../screens/Bills';
 const Stack = createStackNavigator();
 
 const items = [
@@ -30,6 +32,16 @@ const items = [
   {
     name: 'Accounts',
     component: Accounts,
+    headerShown: true,
+  },
+  {
+    name: 'Loans',
+    component: Loans,
+    headerShown: true,
+  },
+  {
+    name: 'Bills',
+    component: Bills,
     headerShown: true,
   },
   {
