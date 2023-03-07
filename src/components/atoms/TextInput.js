@@ -28,12 +28,19 @@ const TextInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
 
+  const handleContentSizeChange = event => {
+    setInputHeight(event.nativeEvent.contentSize.height);
+  };
+
+  const [inputHeight, setInputHeight] = useState(50);
+
   return (
     <View style={[styles.container, style]}>
       {label && <Text style={[styles.label]}>{label}</Text>}
       <View
         style={[
           styles.inputContainer,
+          {height: inputHeight},
           {borderColor: error ? 'red' : isFocused ? 'blue' : '#E0E0E0'},
         ]}>
         <Icon
@@ -45,6 +52,8 @@ const TextInput = ({
         <RNInput
           secureTextEntry={hidePassword}
           autoCorrect={false}
+          style={[{flex: 1, color: colors.WHITE_2}, {height: inputHeight}]}
+          onContentSizeChange={handleContentSizeChange}
           cursorColor={colors.WHITE_2}
           onFocus={() => {
             onFocus();
@@ -58,7 +67,6 @@ const TextInput = ({
           onBlur={() => {
             setIsFocused(false);
           }}
-          style={{flex: 1, color: colors.WHITE_2}}
           {...props}
         />
         {password && (

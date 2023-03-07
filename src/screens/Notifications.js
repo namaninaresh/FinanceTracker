@@ -25,7 +25,6 @@ import {colors} from '../styles';
 import {
   generateUniqueId,
   getLastWorkingDay,
-  getLastWorkingDay2,
   isFakeSms,
   sortedTransactionsByDate,
 } from '../utils';
@@ -44,7 +43,7 @@ const Notifications = props => {
      *    "SELECT * from messages WHERE (other filters) AND date <= maxDate"
      *    - Same for minDate but with "date >= minDate"
      */
-    minDate: 1675103400000, // timestamp (in milliseconds since UNIX epoch)
+    minDate: getLastWorkingDay(), // timestamp (in milliseconds since UNIX epoch)
     //maxDate: 1556277910456, // timestamp (in milliseconds since UNIX epoch)
     //bodyRegex: '(.*)How are you(.*)', // content regex to match
 
@@ -56,9 +55,11 @@ const Notifications = props => {
     //body: 'How are you', // content to match
     /** the next 2 filters can be used for pagination **/
     indexFrom: 0, // start from index 0
-    bodyRegex: '(.*)(credited|debited|spent|recieved|Balance|sent|paid)(.*)',
+    bodyRegex: '(.*)(credited|debited|spent|received|Balance|sent|paid)(.*)',
     // count of SMS to return each time
   };
+
+  //console.log('-----', getLastWorkingDay());
 
   const {
     transactions,
@@ -102,7 +103,7 @@ const Notifications = props => {
             let temp = [];
             let bankAccounts = accounts;
 
-            arr.forEach(function (object) {
+            arr.forEach(function (object, index) {
               if (readSMSIDs.includes(object._id)) {
                 console.log('message alread read !@');
               } else {
@@ -156,7 +157,7 @@ const Notifications = props => {
                   );
                   if (typeMatch) {
                     type = typeMatch[0];
-                    console.log('type==', type);
+
                     if ((type == 'spent') | (type == 'paid') | (type == 'sent'))
                       type = 'debited';
                     if (type == 'recieved') type = 'credited';

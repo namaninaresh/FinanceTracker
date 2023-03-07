@@ -26,6 +26,7 @@ import Picker from '../components/molecules/Picker';
 const AddTransaction = ({navigation, route}) => {
   // const navigation = useNavigation();
   const item = route.params;
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: route.params ? 'Update Transaction' : 'Add Transaction',
@@ -124,7 +125,7 @@ const AddTransaction = ({navigation, route}) => {
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || inputs.date;
-    console.log('datfor', dateFormatter(currentDate));
+
     let datTime = setDateTime(currentDate);
     setInputs(prevState => ({
       ...prevState,

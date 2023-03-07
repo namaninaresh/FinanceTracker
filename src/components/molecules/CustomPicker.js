@@ -8,7 +8,7 @@ const CustomPicker = ({items, onValueChange, style, selected = null}) => {
   try {
     selectedBank = selected
       ? items.filter(item => {
-          if ((item.id = selected)) {
+          if (item.id === selected) {
             return item;
           }
         })[0].title
@@ -16,6 +16,7 @@ const CustomPicker = ({items, onValueChange, style, selected = null}) => {
   } catch (error) {
     selectedBank = null;
   }
+  console.log('selcted ', selectedBank);
 
   const [selectedValue, setSelectedValue] = useState(selectedBank);
   const [showPicker, setShowPicker] = useState(false);

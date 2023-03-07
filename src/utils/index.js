@@ -1,4 +1,7 @@
+import {useContext} from 'react';
 import {View} from 'react-native';
+import {UserContext} from '../context/UserContext';
+import {patterns} from './AppConstants';
 
 export function separator() {
   return <View></View>;
@@ -139,8 +142,8 @@ export function getLastWorkingDay() {
   // Format the last working day of the last month for display
   var lastWorkingDay = lastMonth.toLocaleDateString();
   //console.log('Last working day of last month: ' + lastWorkingDay);
-
-  var lastWorkingDayTimestamp = lastMonth.getTime() / 1000;
+  var lastWorkingDayTimestamp = lastMonth.getTime();
+  //var lastWorkingDayTimestamp = lastMonth.getTime() / 1000;
   //console.log('las work day', lastWorkingDayTimestamp);
   return lastWorkingDayTimestamp;
   /*var currentDate = new Date();
@@ -195,4 +198,57 @@ export const sortedTransactionsOld = transations => {
 export const isFakeSms = message => {
   const fakeSmsPattern = /claim|fake|prize|winner|congratulations|spam/i;
   return fakeSmsPattern.test(message);
+};
+
+export const smsPatternsVerify = transaction => {
+  const sample = {
+    title: null,
+    availableBalance: null,
+    amount: null,
+  };
+
+  for (const pattern of patterns) {
+    const match = transaction.desc.match(pattern);
+    if (match) {
+      const {
+        senderName,
+        senderName2,
+        amount,
+        info,
+        neftSenderName,
+        accountNumber,
+        availableBalance,
+      } = match.groups;
+      if (transaction.desc.includes('statement')) {
+        sample.title = `Statement for ${accountNumber}`;
+      }
+
+      sample.title =
+        match.groups.senderName ||
+        match.groups.senderName2 ||
+        match.groups.neftSenderName;
+      if (senderName && senderName2 && neftSenderName) {
+        sample.title = `${senderName} - ${senderName2} ${neftSenderName}`;
+      }
+
+      if (availableBalance) {
+        const avlBalance =
+          availableBalance && availableBalance.replace(/,/g, '');
+        sample.availableBalance = parseFloat(avlBalance);
+      }
+      if (!senderName && !senderName2 && !neftSenderName) sample.title = info;
+
+      if (transaction.desc.includes('ATM')) {
+        sample.title = 'Atm Withdrawal';
+      }
+      if (sample.title && sample.title.includes('TATA'))
+        sample.title = 'Salary Credited : TCS';
+      if (sample.title && sample.title.includes('ACH*TPCapfrst'))
+        sample.title = 'Loan Amount Debited : IDFC';
+
+      sample.amount = amount;
+
+      return sample;
+    }
+  }
 };

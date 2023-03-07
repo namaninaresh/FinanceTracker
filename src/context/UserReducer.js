@@ -5,6 +5,7 @@ import StoreAsync from '../store/StoreAsync';
 import {
   generateUniqueId,
   getCurrentTimeUnix,
+  smsPatternsVerify,
   sortedTransactionsByDate,
   sortedTransactionsOld,
 } from '../utils';
@@ -179,32 +180,31 @@ export default UserReducer = (state = initialState, action) => {
       if (Array.isArray(action.payload)) {
         // If it's an array, loop through each item and add the transaction
         action.payload.forEach((transaction, index) => {
-          if (!transaction.desc.includes('Balances for Ac')) {
+          if (transaction.desc.includes('PERSONAL LOAN')) {
+          } else if (transaction.desc.includes('Balances for Ac')) {
+            const regex = /Ac\s+X{8}(\d+)\s+/;
+            const match = transaction.desc.match(regex);
+            const accountNumber = match ? match[1] : null;
+
+            const balanceMatch = transaction.desc.match(
+              /Avbl\. Bal:\s+INR\s+([\d.]+)/,
+            );
+            const balance = balanceMatch ? parseFloat(balanceMatch[1]) : null;
+            const account = accounts.find(acc =>
+              accountNumber.includes(acc.desc),
+            );
+            if (account) account.amount = balance;
+          } else {
+            const smsDetails = smsPatternsVerify(transaction);
+            console.log('sms', smsDetails);
+            transaction.title = smsDetails && smsDetails.title;
+
             const regex = new RegExp(transaction.accountId);
 
             //  const sms2AccountType = sms2.match(accountTypeRegex)[0].toLowerCase();
 
             if (transaction.desc.includes('PPBL')) {
-              console.log('included', transaction.desc);
-              const regex = /a\/c\s+(\d*[A-Z]+\d+)/i;
-              const accountNumberMatch = transaction.desc.match(regex);
-              const accountNumber = accountNumberMatch
-                ? accountNumberMatch[1]
-                : null;
-
-              // Extracting title
-              let title = '';
-              try {
-                title = transaction.desc.match(/to (.+?) on/i)[1];
-              } catch (error) {
-                title = transaction.desc.match(/to (.+?) from/i)[1];
-              }
-              // Extracting amount
-              const amount = parseFloat(
-                transaction.desc.match(/Rs\.([\d.]+)/i)[1],
-              );
-              transaction.title = title;
-              transaction.amount = amount;
+              transaction.amount = smsDetails && parseFloat(smsDetails.amount);
             }
             //  console.log(`card type: ${sms2AccountType}`);
             let account = accounts.find(
@@ -230,7 +230,6 @@ export default UserReducer = (state = initialState, action) => {
                   (accountType === 'a/c')
                 )
                   accountType = 'bank';
-                //  const bankName = sms1.match(/^\w+\s+Bank/)[0];
 
                 const newAccount = {
                   id: accountId,
@@ -257,52 +256,24 @@ export default UserReducer = (state = initialState, action) => {
                   parseFloat(account.amount) - parseFloat(transaction.amount);
                 totalExpense =
                   parseFloat(transaction.amount) + parseFloat(totalExpense);
-
-                /*if (
-                  parseFloat(account.amount) >= parseFloat(transaction.amount)
-                ) {
-                  account.amount =
-                    parseFloat(account.amount) - parseFloat(transaction.amount);
-                  totalExpense =
-                    parseFloat(transaction.amount) + parseFloat(totalExpense);
-                } else {
-                  console.log('errors=', account.amount, transaction.amount);
-                } */
               }
               if (account.vendor === 'card') {
-                const availableBalanceRegex =
-                  /Avl\sLmt:\s?INR\s?([\d,]+(?:\.\d+)?)/;
-                const availableBalanceMatch = transaction.desc.match(
-                  availableBalanceRegex,
-                );
-                const avlBalance = availableBalanceMatch
-                  ? availableBalanceMatch[1].replace(/,/g, '')
-                  : null;
+                account.amount = smsDetails && smsDetails.availableBalance;
 
-                account.amount = avlBalance;
                 totalExpense =
                   parseFloat(transaction.amount) + parseFloat(totalExpense);
               }
             } else if (transaction.type === 'credited') {
               account.amount =
                 parseFloat(account.amount) + parseFloat(transaction.amount);
-
-              /*return {
-                ...account,
-                amount:
-                  parseFloat(account.amount) + parseFloat(transaction.amount),
-              }; */
+            }
+            if (smsDetails && smsDetails.availableBalance) {
+              account.amount = smsDetails.availableBalance;
             }
 
             if (transaction.desc.includes('ATM')) {
-              transaction.title = 'Atm Withdrawal';
-
-              let balRegex = /Avb Bal: INR([\d,]+\.\d{2})/;
-
-              let balanceMatch = transaction.desc.match(balRegex);
-
-              if (balanceMatch) {
-                let balance = parseFloat(balanceMatch[1].replace(',', ''));
+              if (smsDetails) {
+                let balance = parseFloat(smsDetails.availableBalance);
                 account.amount = balance;
               }
             }
@@ -312,25 +283,10 @@ export default UserReducer = (state = initialState, action) => {
               ...transaction,
               id: generateUniqueId(transaction.title),
             });
-          } else {
-            const regex = /Ac\s+X{8}(\d+)\s+/;
-            const match = transaction.desc.match(regex);
-            const accountNumber = match ? match[1] : null;
-            // console.log(accountNumber);
-
-            // Extract the balance using regex
-            const balanceMatch = transaction.desc.match(
-              /Avbl\. Bal:\s+INR\s+([\d.]+)/,
-            );
-            const balance = balanceMatch ? parseFloat(balanceMatch[1]) : null;
-            const account = accounts.find(acc =>
-              accountNumber.includes(acc.desc),
-            );
-            if (account) account.amount = balance;
-            //console.log('balance =>', balance, accountNumber);
           }
 
-          console.warn('info=', transaction, accounts);
+          //console.log(transaction.desc);
+          //smsPatternsVerify(transaction);
         });
       }
       /*    let totalExpense = state.totalExpense;
@@ -351,6 +307,7 @@ export default UserReducer = (state = initialState, action) => {
         lastReadTimeStamp: getCurrentTimeUnix(),
         totalExpense,
       };
+
       // updateAsyncStorage(temp);
       return temp;
     }
