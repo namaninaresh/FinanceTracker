@@ -11,6 +11,7 @@ import Notifications from '../screens/Notifications';
 import Profile from '../screens/Profile';
 import Search from '../screens/Search';
 import FAB from '../components/molecules/Fab';
+import Passbook from '../screens/Passbook';
 const Tab = createBottomTabNavigator();
 const items = [
   {
@@ -22,6 +23,11 @@ const items = [
     name: 'Search',
     component: Search,
     iconName: 'magnify',
+  },
+  {
+    name: 'Passbook',
+    component: Passbook,
+    iconName: 'book-open',
   },
   {
     name: 'Notifications',

@@ -2,7 +2,13 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
 import {colors} from '../../styles';
 
-const CustomPicker = ({items, onValueChange, style, selected = null}) => {
+const CustomPicker = ({
+  items,
+  title = 'Select Bank',
+  onValueChange,
+  style,
+  selected = null,
+}) => {
   let selectedBank = null;
 
   try {
@@ -48,7 +54,7 @@ const CustomPicker = ({items, onValueChange, style, selected = null}) => {
           style,
         ]}>
         <Text style={styles.selectedValueText}>
-          {selectedValue ? selectedValue : 'Select Bank'}
+          {selectedValue ? selectedValue : title}
         </Text>
       </TouchableOpacity>
       <Modal

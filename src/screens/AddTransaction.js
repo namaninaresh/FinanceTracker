@@ -26,7 +26,7 @@ import Picker from '../components/molecules/Picker';
 const AddTransaction = ({navigation, route}) => {
   // const navigation = useNavigation();
   const item = route.params;
-  console.log('item ==', item);
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: route.params ? 'Update Transaction' : 'Add Transaction',

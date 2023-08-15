@@ -196,8 +196,17 @@ export default UserReducer = (state = initialState, action) => {
             if (account) account.amount = balance;
           } else {
             const smsDetails = smsPatternsVerify(transaction);
+
+            console.log('smsDe=', smsDetails);
             //console.log('sms', smsDetails);
-            transaction.title = smsDetails && smsDetails.title;
+            if (smsDetails && smsDetails.title !== undefined) {
+              transaction.title = smsDetails && smsDetails.title;
+            }
+
+            if (smsDetails && smsDetails.amount !== undefined) {
+              smsDetails.amount = smsDetails.amount.replace(/,/g, '');
+              transaction.amount = smsDetails && parseFloat(smsDetails.amount);
+            }
 
             const regex = new RegExp(transaction.accountId);
 
@@ -308,7 +317,7 @@ export default UserReducer = (state = initialState, action) => {
         totalExpense,
       };
 
-      updateAsyncStorage(temp);
+      // updateAsyncStorage(temp);
       return temp;
     }
     case 'ADD_MULTIPLE_TRANSACTIONs': {

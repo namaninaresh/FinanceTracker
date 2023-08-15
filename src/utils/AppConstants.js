@@ -105,6 +105,9 @@ const debitPatternLoan =
 
 const creditPattern =
   /(ICICI Bank Account|Acct) XX(?<accountNumber>\d{3}) (is credited with Rs|debited with INR) (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})(( by (?<senderName>[\w\s]+)\.)|( from (?<senderName2>[\w\s]+)\.))?/;
+const creditPatternBalance =
+  /ICICI Bank (?:Account|Acc) XX(?<accountNumber>\d{3}).*?(?:debited|credited):Rs\. (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})\. .*?(Avb|Available) Bal(?:ance)? is Rs\. (?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))\./i;
+
 /*const upiCreditPattern =
   /Acct XX(?<accountNumber>\d{3}) is credited with Rs (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}) from (?<senderName>[\w\s]+)\. UPI:(?<upiTransactionId>\d+)-(?<upiAppName>[\w\s]+)\./;
 */ const salaryCredit =
@@ -121,11 +124,15 @@ const paytmPattern =
 const paytmPatternUpi =
   /^\Rs\.(?<amount>\d+\.\d{2})\s+sent\s+to\s+(?<senderName>\S+)\s+from\s+PPBL\s+a\/c\s+(?<accountNumber>\d{2}XX\d{4})\.\s+UPI\s+Ref:(?<upiRef>\d+)\.\s+Balance:/;
 
+const paytmPatternUpi2 =
+  /^Rs\.(?<amount>\d+\.\d{2})\s+received\s+from\s+(?<senderName>[^\d]+)\s+in\s+PPBL\s+a\/c\s+(?<accountNumber>\d{2}XX\d{4})\.\s+UPI\s+Ref:\s*(?<upiRef>\d+)\s+Balance:/;
+
 const cardStatement =
   /statement for ICICI Bank Credit Card XX(?<accountNumber>\d{4}).*Total amount of Rs (?<amount>\d+(,\d{3})*(\.\d{1,2})?)/i;
 
 export const patterns = [
   creditPattern,
+  creditPatternBalance,
   debitPattern,
   salaryCredit,
   atmWithDrawal,
@@ -134,5 +141,6 @@ export const patterns = [
   cardPattern,
   paytmPattern,
   paytmPatternUpi,
+  paytmPatternUpi2,
   cardStatement,
 ];

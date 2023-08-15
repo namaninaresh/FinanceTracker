@@ -145,6 +145,7 @@ export function getLastWorkingDay() {
   var lastWorkingDayTimestamp = lastMonth.getTime();
   //var lastWorkingDayTimestamp = lastMonth.getTime() / 1000;
   //console.log('las work day', lastWorkingDayTimestamp);
+  console.log('lastworkding datae', lastWorkingDayTimestamp);
   return lastWorkingDayTimestamp;
   /*var currentDate = new Date();
 
@@ -174,6 +175,22 @@ export function getCurrentTimeUnix() {
   const currentTime = Math.floor(Date.now() / 1000);
   return currentTime;
 }
+
+export function convertDateToUnix(dateStr) {
+  const unixTimestamp = new Date(dateStr).getTime();
+
+  console.log(unixTimestamp);
+  return unixTimestamp;
+}
+
+export function getCurrentDayStartingTimeUnix() {
+  const now = new Date(); // current date and time
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // set time to 00:00:00
+  const startOfDayUnix = Math.floor(startOfDay.getTime()); // convert to Unix timestamp (in seconds)
+
+  console.log(startOfDayUnix);
+  return startOfDayUnix;
+}
 export const generateUniqueId = title => {
   const timestamp = new Date().getTime().toString();
   return `${title}-${timestamp}`;
@@ -196,7 +213,8 @@ export const sortedTransactionsOld = transations => {
 };
 
 export const isFakeSms = message => {
-  const fakeSmsPattern = /claim|fake|prize|winner|congratulations|spam/i;
+  const fakeSmsPattern =
+    /claim|fake|prize|winner|congratulations|rummy|use code|spam/i;
   return fakeSmsPattern.test(message);
 };
 
@@ -206,7 +224,6 @@ export const smsPatternsVerify = transaction => {
     availableBalance: null,
     amount: null,
   };
-
   for (const pattern of patterns) {
     const match = transaction.desc.match(pattern);
     if (match) {
@@ -219,6 +236,7 @@ export const smsPatternsVerify = transaction => {
         accountNumber,
         availableBalance,
       } = match.groups;
+      console.log('admf=', match.groups);
       if (transaction.desc.includes('statement')) {
         sample.title = `Statement for ${accountNumber}`;
       }
@@ -247,7 +265,7 @@ export const smsPatternsVerify = transaction => {
         sample.title = 'Loan Amount Debited : IDFC';
 
       sample.amount = amount;
-
+      console.log('sameple', sample);
       return sample;
     }
   }

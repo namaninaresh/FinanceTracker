@@ -59,6 +59,7 @@ const Notifications = props => {
     //body: 'How are you', // content to match
     /** the next 2 filters can be used for pagination **/
     indexFrom: 0, // start from index 0
+    maxCount: 15,
     bodyRegex: '(.*)(credited|debited|spent|received|Balance|sent|paid)(.*)',
     // count of SMS to return each time
   };
@@ -121,8 +122,6 @@ const Notifications = props => {
                   let cardNumber = '';
                   let accountId = '';
 
-                  var words = object.body.split(' ');
-
                   // if (description.includes('debited')) {
                   //   title = description.match(/debited for.*?(\w+)/)[1];
                   // } else {
@@ -158,14 +157,14 @@ const Notifications = props => {
 
                   // Extract the type
                   let typeMatch = description.match(
-                    /debited|credited|spent|sent|paid|recieved/,
+                    /debited|credited|spent|sent|paid|received/,
                   );
                   if (typeMatch) {
                     type = typeMatch[0];
 
                     if ((type == 'spent') | (type == 'paid') | (type == 'sent'))
                       type = 'debited';
-                    if (type == 'recieved') type = 'credited';
+                    if (type == 'received') type = 'credited';
                   }
 
                   temp.push({

@@ -15,11 +15,17 @@ import Dropdown from '../components/atoms/Dropdown';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
 import Chip from '../components/molecules/Chip';
+import CustomPicker from '../components/molecules/CustomPicker';
 import FAB from '../components/molecules/Fab';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
-import {sortedTransactionsByDate} from '../utils';
+import {
+  convertDateToUnix,
+  getCurrentDayStartingTimeUnix,
+  getCurrentTimeUnix,
+  sortedTransactionsByDate,
+} from '../utils';
 
 const data = [
   {
@@ -59,7 +65,9 @@ const AllTransactions = ({navigation}) => {
 
   const {transactions, deleteTransaction} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
-  const sortedTransactions = sortedTransactionsByDate(transactions);
+  const [sortedTransactions, setSortedTrans] = useState(
+    sortedTransactionsByDate(transactions),
+  );
   //console.log('sorted', sortedTransactions);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -68,10 +76,19 @@ const AllTransactions = ({navigation}) => {
     }, 2000);
   }, []);
 
-  const options = ['All', 'Today', 'Price-High', 'Price-low'];
+  const options = [
+    {title: 'All', id: 'All'},
+    {title: 'Today', id: 'Today'},
+    {title: 'Price - High', id: 'Price-High'},
+    {title: 'Price-Low', id: 'Price-Low'},
+    {title: 'Date', id: 'date'},
+  ];
 
   const deleteFilter = index => {
+    console.log('====>', filterSelected, index);
+    console.log(filterSelected.filter((item, i) => i !== index));
     setFilters(current => current.filter((item, i) => i !== index));
+    console.log('====', filterSelected);
     /*const index= filterSelected.findIndex(item => item.include("price"));
 
    if(index !== -1)
@@ -83,6 +100,7 @@ const AllTransactions = ({navigation}) => {
 
   const onValueChange = text => {
     const array = [...filterSelected];
+
     if (text.includes('Price')) {
       const index = array.findIndex(item => item.includes('Price'));
       if (index !== -1) {
@@ -105,6 +123,14 @@ const AllTransactions = ({navigation}) => {
       if (filterSelected.indexOf(text) === -1)
         setFilters([...filterSelected, text]);
     }
+
+    if (filterSelected.findIndex(item => item.includes('Today'))) {
+      console.log(getCurrentDayStartingTimeUnix());
+      const lists = sortedTransactions.filter(
+        item => convertDateToUnix(item.date) >= getCurrentDayStartingTimeUnix(),
+      );
+      setSortedTrans(lists);
+    }
   };
   return (
     <AppLayout>
@@ -121,6 +147,11 @@ const AllTransactions = ({navigation}) => {
             paddingHorizontal: 10,
             justifyContent: 'flex-end',
           }}>
+          <CustomPicker
+            title="Filter By"
+            items={options}
+            onValueChange={text => onValueChange(text)}
+          />
           <Text style={{paddingHorizontal: 10}}>Filter By</Text>
 
           {/*<Icon name="filter-variant" size={24} color={'white'} /> */}
@@ -146,27 +177,34 @@ const AllTransactions = ({navigation}) => {
       </View>
 
       <Card>
-        <FlatList
-          data={sortedTransactions}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => (
-            <TransItem
-              item={item}
-              index={index}
-              key={index}
-              onClick={() => {
-                navigation.navigate('addTransaction', item);
-              }}
-              onDelete={() => deleteTransaction(item)}
-            />
-          )}
-          contentContainerStyle={{
-            padding: 5,
-            paddingBottom: 100 + (filterSelected.length > 0 && 30),
-          }}
-        />
+        {sortedTransactions.length > 0 ? (
+          <FlatList
+            data={sortedTransactions}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <TransItem
+                item={item}
+                index={index}
+                key={index}
+                onClick={() => {
+                  navigation.navigate('addTransaction', item);
+                }}
+                onDelete={() => deleteTransaction(item)}
+              />
+            )}
+            contentContainerStyle={{
+              padding: 5,
+              paddingBottom: 100 + (filterSelected.length > 0 && 30),
+            }}
+          />
+        ) : (
+          <Text
+            style={{opacity: 0.2, textAlign: 'center', paddingVertical: 20}}>
+            There are no Transactions
+          </Text>
+        )}
 
         {/*<ScrollView
           showsHorizontalScrollIndicator={false}
