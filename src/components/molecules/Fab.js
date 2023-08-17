@@ -3,12 +3,12 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../../styles';
 import {useNavigation} from '@react-navigation/native';
-const FAB = props => {
+const FAB = ({redirectTo = 'addTransaction'}) => {
   const navigation = useNavigation();
   return (
     <Pressable
       style={styles.container}
-      onPress={() => navigation.navigate('addTransaction')}>
+      onPress={() => navigation.navigate(redirectTo)}>
       <Icon name="plus-circle" color={colors.ORANGE_DARK} size={50} />
     </Pressable>
   );

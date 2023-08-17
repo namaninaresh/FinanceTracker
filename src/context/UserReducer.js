@@ -18,101 +18,19 @@ export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION';
 export const DELETE_TRANSACTION = 'DELETE_TRANSACTION';
 export const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT';
 export const DELETE_ACCOUNT = 'DELETE_ACCOUNT';
+export const ADD_BOOK = 'ADD_BOOK';
+export const UPDATE_BOOK = 'UPDATE_BOOK';
+export const DELETE_BOOK = 'DELETE_BOOK';
+export const ADD_TRANSACTION_BOOK = 'ADD_TRANSACTION_BOOK';
+
+export const UPDATE_TRANSACTION_BOOK = 'UPDATE_TRANSACTION_BOOK';
 export const initialState = {
   transactions: [],
   totalExpense: 0,
   accounts: [],
+  books: [],
   readSMSIDs: [],
   lastReadTimeStamp: 0,
-};
-
-export const initialStates = {
-  transactions: [
-    {
-      id: 1,
-      title: 'Test 1',
-      amount: 1000,
-      type: 'debited',
-      desc: 'Test sampel',
-      date: new Date(),
-      accountId: 1,
-      dateTimeText: {
-        date: null,
-        time: null,
-      },
-    },
-    {
-      id: 2,
-      title: 'Test 2',
-      amount: 200,
-      type: 'credited',
-      desc: 'Test sampel',
-      date: new Date(),
-      accountId: 1,
-      dateTimeText: {
-        date: null,
-        time: null,
-      },
-    },
-    {
-      id: 3,
-      title: 'Test 3',
-      amount: 40,
-      type: 'debited',
-      desc: 'Test sampel',
-      date: new Date(),
-      accountId: 1,
-      dateTimeText: {
-        date: null,
-        time: null,
-      },
-    },
-    {
-      id: 4,
-      title: 'Test 4',
-      amount: 90,
-      type: 'credited',
-      desc: 'Test sampel',
-      date: new Date(),
-      accountId: 1,
-      dateTimeText: {
-        date: null,
-        time: null,
-      },
-    },
-    {
-      id: 5,
-      title: 'Test 5',
-      amount: 55,
-      type: 'income',
-      desc: 'Test sampel',
-      date: new Date(),
-      accountId: 1,
-      dateTimeText: {
-        date: null,
-        time: null,
-      },
-    },
-  ],
-  totalExpense: 1000,
-  accounts: [
-    {
-      id: 1,
-      title: 'Paytm Bank',
-      desc: '91 8686506505',
-      amount: 7908,
-      type: 'income',
-      vendor: 'bank',
-    },
-    {
-      id: 2,
-      title: 'ICICI Bank',
-      desc: '*********124',
-      amount: 12340,
-      type: 'income',
-      vendor: 'bank',
-    },
-  ],
 };
 
 export default UserReducer = (state = initialState, action) => {
@@ -317,7 +235,7 @@ export default UserReducer = (state = initialState, action) => {
         totalExpense,
       };
 
-      // updateAsyncStorage(temp);
+      updateAsyncStorage(temp);
       return temp;
     }
     case 'ADD_MULTIPLE_TRANSACTIONs': {
@@ -614,6 +532,121 @@ export default UserReducer = (state = initialState, action) => {
       };
       updateAsyncStorage(temp);
       return temp;
+
+    case ADD_BOOK:
+      temp = {
+        ...state,
+        books: [
+          ...state.books,
+          {
+            ...action.payload,
+            id: generateUniqueId(action.payload.title),
+            transactions: [],
+          },
+        ],
+      };
+      updateAsyncStorage(temp);
+      return temp;
+    case UPDATE_BOOK:
+      temp = {
+        ...state,
+        books: state.books.map(book => {
+          if (book.id === action.payload.id) {
+            return action.payload;
+          }
+          return book;
+        }),
+      };
+      updateAsyncStorage(temp);
+      return temp;
+    case DELETE_BOOK: {
+      const books = [...state.books];
+      const updatedBooks = books.filter(book => book.id !== action.payload.id);
+      let temp = {
+        ...state,
+        books: [...updatedBooks],
+      };
+      updateAsyncStorage(temp);
+      return temp;
+    }
+
+    case ADD_TRANSACTION_BOOK: {
+      console.log('payload', action.payload);
+      const {bookId, date, amount, type} = action.payload;
+      const books = [...state.books];
+      const bookIndex = books.findIndex(book => book.id === bookId);
+      const book = books[bookIndex];
+
+      if (type === 'debited')
+        book.amount = parseFloat(book.amount) - parseFloat(amount);
+      else book.amount = parseFloat(book.amount) + parseFloat(amount);
+      var temp = {
+        ...action.payload,
+        id: generateUniqueId(action.payload.title),
+        amount: parseFloat(amount),
+      };
+      book.transactions.push(temp);
+      console.log('books=', books);
+      updateAsyncStorage({
+        ...state,
+        books,
+      });
+
+      return {
+        ...state,
+        books,
+      };
+    }
+    case UPDATE_TRANSACTION_BOOK: {
+      console.log('update', action);
+      const {
+        id,
+        bookId,
+        oldBookId,
+        oldAmount,
+        oldType,
+        amount,
+        type,
+        title,
+        desc,
+      } = action.payload;
+      const books = [...state.books];
+      console.log('booksupdate=', books);
+      const fromBookIndex = books.findIndex(book => book.id === oldBookId);
+      const toBookIndex = books.findIndex(book => book.id === bookId);
+
+      const transactionToMove = books[fromBookIndex].transactions.find(
+        transaction => transaction.id === id,
+      );
+
+      if (transactionToMove) {
+        books[fromBookIndex].transactions = books[
+          fromBookIndex
+        ].transactions.filter(transaction => transaction.id !== id);
+
+        let transctionCombined = {...transactionToMove, ...action.payload};
+        if (oldType === 'debited') {
+          books[fromBookIndex].amount =
+            books[fromBookIndex].amount + parseFloat(oldAmount);
+        } else
+          books[fromBookIndex].amount =
+            books[fromBookIndex].amount - parseFloat(oldAmount);
+
+        if (type === 'debited') {
+          books[toBookIndex].amount =
+            books[toBookIndex].amount - parseFloat(amount);
+        } else
+          books[toBookIndex].amount =
+            books[toBookIndex].amount + parseFloat(amount);
+        books[toBookIndex].transactions.push(transctionCombined);
+      }
+
+      return {
+        ...state,
+        books,
+      };
+    }
+
     default:
       return state;
   }

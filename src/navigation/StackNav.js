@@ -17,6 +17,9 @@ import AddAccountModal from '../screens/AddAccountModal';
 import AddTransaction from '../screens/AddTransaction';
 import Loans from '../screens/Loans';
 import Bills from '../screens/Bills';
+import BookInfo from '../screens/BookInfo';
+import AddTransBook from '../screens/AddTransBook';
+import AddBook from '../screens/AddBook';
 const Stack = createStackNavigator();
 
 const items = [
@@ -27,6 +30,11 @@ const items = [
   {
     name: 'All Transactions',
     component: AllTransactions,
+    headerShown: true,
+  },
+  {
+    name: 'Book Details',
+    component: BookInfo,
     headerShown: true,
   },
   {
@@ -72,6 +80,16 @@ const items = [
   {
     name: 'addTransaction',
     component: AddTransaction,
+    headerShown: true,
+  },
+  {
+    name: 'addTransactionBook',
+    component: AddTransBook,
+    headerShown: true,
+  },
+  {
+    name: 'AddBook',
+    component: AddBook,
     headerShown: true,
   },
 ];

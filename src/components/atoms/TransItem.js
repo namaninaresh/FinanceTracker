@@ -29,7 +29,15 @@ const PrefixIcon = ({iconName = 'bank'}) => {
   );
 };
 
-const TransItem = ({item, index, onClick, prefix = false, style, onDelete}) => {
+const TransItem = ({
+  item,
+  index,
+  onClick,
+  onEdit = onClick,
+  prefix = false,
+  style,
+  onDelete,
+}) => {
   const navigation = useNavigation();
   let {type = 'debited', title, desc = null, amount = 0, date, vendor} = item;
   let rupeeColor = type === 'debited' ? colors.ORANGE_DARK : colors.GREEN_DARK;
@@ -92,7 +100,7 @@ const TransItem = ({item, index, onClick, prefix = false, style, onDelete}) => {
         renderRightActions(progress, dragX, onDelete)
       }
       renderLeftActions={(progress, dragX) =>
-        renderLeftActions(progress, dragX, onClick)
+        renderLeftActions(progress, dragX, onEdit)
       }
       onSwipeableOpen={() => closeRow(index)}
       ref={ref => (row[index] = ref)}

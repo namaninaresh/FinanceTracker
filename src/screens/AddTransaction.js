@@ -125,7 +125,6 @@ const AddTransaction = ({navigation, route}) => {
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || inputs.date;
-    console.log('datfor', dateFormatter(currentDate));
     let datTime = setDateTime(currentDate);
     setInputs(prevState => ({
       ...prevState,

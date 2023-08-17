@@ -4,6 +4,7 @@ import {PermissionsAndroid} from 'react-native';
 import UserReducer, {
   ADD_ACCOUNT,
   ADD_MULTIPLE_TRANSACTION,
+  ADD_BOOK,
   ADD_TRANSACTION,
   DELETE_ACCOUNT,
   DELETE_TRANSACTION,
@@ -11,6 +12,10 @@ import UserReducer, {
   INITIAL_STATE,
   UPDATE_ACCOUNT,
   UPDATE_TRANSACTION,
+  ADD_TRANSACTION_BOOK,
+  UPDATE_TRANSACTION_BOOK,
+  DELETE_BOOK,
+  UPDATE_BOOK,
 } from './UserReducer';
 import {useNavigation} from '@react-navigation/native';
 import {getInitialData, updateAsyncStorage} from '../store/StoreAsync';
@@ -49,6 +54,36 @@ const UserContextProvider = ({children}) => {
     dispatch({
       type: ADD_ACCOUNT,
       payload: account,
+    });
+  };
+  const addBook = book => {
+    dispatch({
+      type: ADD_BOOK,
+      payload: book,
+    });
+  };
+  const updateBook = book => [
+    dispatch({
+      type: UPDATE_BOOK,
+      payload: book,
+    }),
+  ];
+  const deleteBook = book => {
+    dispatch({
+      type: DELETE_BOOK,
+      payload: book,
+    });
+  };
+  const addTransactionBook = transaction => {
+    dispatch({
+      type: ADD_TRANSACTION_BOOK,
+      payload: transaction,
+    });
+  };
+  const updateTransactionBook = transaction => {
+    dispatch({
+      type: UPDATE_TRANSACTION_BOOK,
+      payload: transaction,
     });
   };
   const updateAccount = account => {
@@ -147,9 +182,15 @@ const UserContextProvider = ({children}) => {
         addAccount,
         updateAccount,
         deleteAccount,
+        addBook,
+        deleteBook,
+        updateBook,
         addMultipleTransaction,
         updateTransaction,
         deleteTransaction,
+        addTransactionBook,
+        updateTransactionBook,
+        books: state.books,
         readSMSIDs: state.readSMSIDs,
         totalExpense: state.totalExpense,
         accounts: state.accounts,

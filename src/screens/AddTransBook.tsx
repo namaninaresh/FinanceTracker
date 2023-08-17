@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Alert,
   Keyboard,
@@ -21,20 +21,34 @@ import {UserContext} from '../context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import CustomPicker from '../components/molecules/CustomPicker';
 
-const AddTransaction = ({navigation}) => {
-  // const navigation = useNavigation();
-  const {addTransaction, accounts} = useContext(UserContext);
+import Picker from '../components/molecules/Picker';
 
-  const [inputs, setInputs] = useState({
-    title: '',
-    amount: 0,
-    desc: '',
-    date: new Date(),
-    dateTimeText: {
-      date: null,
-      time: null,
-    },
-  });
+const AddTransBook = ({navigation, route}) => {
+  // const navigation = useNavigation();
+  const item = route.params;
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: route.params ? 'Update Transaction' : 'Add Transaction',
+    });
+  }, []);
+
+  const {updateTransactionBook, books, addTransactionBook} =
+    useContext(UserContext);
+  const [inputs, setInputs] = useState(
+    item
+      ? item
+      : {
+          title: '',
+          amount: 0,
+          bookId: null,
+          type: 'debited',
+          date: new Date(),
+          dateTimeText: {
+            date: null,
+            time: null,
+          },
+        },
+  );
   const [showDate, setShowDate] = useState(false);
   const [mode, setMode] = useState('date');
   const [modeDate, setDateMode] = useState({mode: 'date', showDate: false});
@@ -57,7 +71,7 @@ const AddTransaction = ({navigation}) => {
       handleError('Please enter title', 'title');
       valid = false;
     }
-    if (!inputs.amount | (Number(inputs.amount) === 0)) {
+    if (!inputs.amount || parseFloat(inputs.amount) === 0) {
       handleError('Please enter amount', 'amount');
       valid = false;
     }
@@ -74,11 +88,23 @@ const AddTransaction = ({navigation}) => {
     setLoading(true);
     setTimeout(async () => {
       setLoading(false);
-      addTransaction(inputs);
+      try {
+        item
+          ? updateTransactionBook({
+              ...inputs,
+              oldBookId: route.params.bookId,
+              oldAmount: route.params.amount,
+              oldType: route.params.type,
+            })
+          : addTransactionBook(inputs);
+      } catch (error) {
+        console.log('error', error);
+      }
       setInputs({
         title: '',
         amount: 0,
         desc: '',
+        bookId: null,
         date: new Date(),
         dateTimeText: {
           date: null,
@@ -94,6 +120,7 @@ const AddTransaction = ({navigation}) => {
       title: '',
       amount: 0,
       desc: '',
+      bookId: null,
       date: new Date(),
       dateTimeText: {
         date: null,
@@ -149,7 +176,7 @@ const AddTransaction = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
         <Card style={{paddingHorizontal: 10}}>
-          <Card.Title>Add New Transaction</Card.Title>
+          <Card.Title>{item ? 'Update ' : 'Add New'} Transaction</Card.Title>
           <View>
             <TextInput
               value={inputs.title}
@@ -161,22 +188,46 @@ const AddTransaction = ({navigation}) => {
               }}
               onChangeText={text => handleChange(text, 'title')}
             />
-            <TextInput
-              value={inputs.amount}
-              inputMode="numeric"
-              label={'Amount'}
-              error={errors.amount}
-              keyboardType="numeric"
-              iconName="cash"
-              onFocus={() => {
-                handleError(null, 'amount');
-              }}
-              onChangeText={text => handleChange(text, 'amount')}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 0,
+                margin: 0,
+              }}>
+              <TextInput
+                value={inputs.amount}
+                inputMode="numeric"
+                label={'Amount'}
+                error={errors.amount}
+                keyboardType="numeric"
+                iconName="cash"
+                onFocus={() => {
+                  handleError(null, 'amount');
+                }}
+                style={{width: '50%', marginRight: 10}}
+                onChangeText={text => handleChange(text, 'amount')}
+              />
+              <CustomPicker
+                title="Select Book"
+                items={books}
+                selected={item && item.bookId}
+                onValueChange={text => handleChange(text, 'bookId')}
+              />
+            </View>
+
+            <View>
+              <Picker
+                options={['debited', 'credited', 'bill']}
+                selectedValue={inputs.type}
+                onValueChange={text => handleChange(text, 'type')}
+              />
+            </View>
             <TextInput
               value={inputs.desc}
               multiline={true}
-              label={'desc'}
+              label={'Desc'}
               error={errors.desc}
               onFocus={() => {
                 handleError(null, 'desc');
@@ -234,14 +285,9 @@ const AddTransaction = ({navigation}) => {
             </View>
           </View>
         </Card>
-        <CustomPicker
-          items={accounts}
-          onValueChange={text => {
-            console.log(text);
-          }}
-        />
+
         <View style={styles.center}>
-          <Button title={'Add'} onPress={validate} />
+          <Button title={item ? 'Update' : 'Add'} onPress={validate} />
           <Button title={'Reset'} mode="outlined" onPress={handleReset} />
         </View>
 
@@ -270,6 +316,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  picker: {
+    height: 50,
+    width: 100,
+    color: '#34495e',
+    borderWidth: 1,
+    borderColor: '#bdc3c7',
+    borderRadius: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
 });
 
-export default React.memo(AddTransaction);
+export default React.memo(AddTransBook);

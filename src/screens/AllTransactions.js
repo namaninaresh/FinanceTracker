@@ -59,9 +59,6 @@ const data = [
 ];
 const AllTransactions = ({navigation}) => {
   const [filterSelected, setFilters] = useState([]);
-  const deleteItem = ({item, index}) => {
-    console.log('delete', item, index);
-  };
 
   const {transactions, deleteTransaction} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -85,10 +82,7 @@ const AllTransactions = ({navigation}) => {
   ];
 
   const deleteFilter = index => {
-    console.log('====>', filterSelected, index);
-    console.log(filterSelected.filter((item, i) => i !== index));
     setFilters(current => current.filter((item, i) => i !== index));
-    console.log('====', filterSelected);
     /*const index= filterSelected.findIndex(item => item.include("price"));
 
    if(index !== -1)
@@ -125,7 +119,6 @@ const AllTransactions = ({navigation}) => {
     }
 
     if (filterSelected.findIndex(item => item.includes('Today'))) {
-      console.log(getCurrentDayStartingTimeUnix());
       const lists = sortedTransactions.filter(
         item => convertDateToUnix(item.date) >= getCurrentDayStartingTimeUnix(),
       );

@@ -22,7 +22,6 @@ const CustomPicker = ({
   } catch (error) {
     selectedBank = null;
   }
-  console.log('selcted ', selectedBank);
 
   const [selectedValue, setSelectedValue] = useState(selectedBank);
   const [showPicker, setShowPicker] = useState(false);

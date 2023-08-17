@@ -4,7 +4,7 @@
 
 import 'react-native';
 import React from 'react';
-import App from '../src/App_t';
+import App from '../src_old/App_t';
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
