@@ -11,7 +11,6 @@ interface Books {
   title: string;
   amount: number;
 }
-[];
 
 const Books = () => {
   const {books, deleteBook} = useContext(UserContext);

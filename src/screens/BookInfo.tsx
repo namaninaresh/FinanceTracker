@@ -24,7 +24,7 @@ import {sortedTransactionsByDate} from '../utils';
 const BookInfo = ({navigation, route}) => {
   const [filterSelected, setFilters] = useState([]);
 
-  const {books} = useContext(UserContext);
+  const {books, deleteTransactionBook} = useContext(UserContext);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const booksIndex = books.findIndex(book => book.id === route.params.id);
@@ -55,7 +55,7 @@ const BookInfo = ({navigation, route}) => {
                 onClick={() => {
                   navigation.navigate('addTransactionBook', item);
                 }}
-                onDelete={() => console.log(item)}
+                onDelete={() => deleteTransactionBook(item)}
               />
             )}
             contentContainerStyle={{

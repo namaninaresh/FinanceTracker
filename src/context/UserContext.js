@@ -16,6 +16,7 @@ import UserReducer, {
   UPDATE_TRANSACTION_BOOK,
   DELETE_BOOK,
   UPDATE_BOOK,
+  DELETE_TRANSACTION_BOOK,
 } from './UserReducer';
 import {useNavigation} from '@react-navigation/native';
 import {getInitialData, updateAsyncStorage} from '../store/StoreAsync';
@@ -83,6 +84,12 @@ const UserContextProvider = ({children}) => {
   const updateTransactionBook = transaction => {
     dispatch({
       type: UPDATE_TRANSACTION_BOOK,
+      payload: transaction,
+    });
+  };
+  const deleteTransactionBook = transaction => {
+    dispatch({
+      type: DELETE_TRANSACTION_BOOK,
       payload: transaction,
     });
   };
@@ -190,6 +197,7 @@ const UserContextProvider = ({children}) => {
         deleteTransaction,
         addTransactionBook,
         updateTransactionBook,
+        deleteTransactionBook,
         books: state.books,
         readSMSIDs: state.readSMSIDs,
         totalExpense: state.totalExpense,

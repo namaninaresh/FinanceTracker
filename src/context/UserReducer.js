@@ -21,9 +21,10 @@ export const DELETE_ACCOUNT = 'DELETE_ACCOUNT';
 export const ADD_BOOK = 'ADD_BOOK';
 export const UPDATE_BOOK = 'UPDATE_BOOK';
 export const DELETE_BOOK = 'DELETE_BOOK';
-export const ADD_TRANSACTION_BOOK = 'ADD_TRANSACTION_BOOK';
 
+export const ADD_TRANSACTION_BOOK = 'ADD_TRANSACTION_BOOK';
 export const UPDATE_TRANSACTION_BOOK = 'UPDATE_TRANSACTION_BOOK';
+export const DELETE_TRANSACTION_BOOK = 'DELETE_TRANSACTION_BOOK';
 export const initialState = {
   transactions: [],
   totalExpense: 0,
@@ -646,7 +647,28 @@ export default UserReducer = (state = initialState, action) => {
         books,
       };
     }
+    case DELETE_TRANSACTION_BOOK: {
+      const {id, bookId, type, amount} = action.payload;
+      const books = [...state.books];
+      const bookIndex = books.findIndex(book => book.id === bookId);
+      const book = books[bookIndex];
 
+      books[bookIndex].transactions = books[bookIndex].transactions.filter(
+        transaction => transaction.id !== id,
+      );
+
+      if (type === 'debited') {
+        book.amount += parseFloat(amount);
+      } else book.amount -= parseFloat(amount);
+
+      temp = {
+        ...state,
+        books,
+      };
+      console.log('books==', books);
+      updateAsyncStorage(temp);
+      return temp;
+    }
     default:
       return state;
   }
