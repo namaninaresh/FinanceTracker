@@ -1,24 +1,15 @@
-import {
-  Animated,
-  View,
-  Pressable,
-  StyleSheet,
-  Keyboard,
-  ScrollView,
-} from 'react-native';
-import {useTheme} from '@react-navigation/native';
 import {useCardAnimation} from '@react-navigation/stack';
+import {Keyboard, ScrollView, View} from 'react-native';
 
-import Button from '../components/atoms/Button';
-import Text from '../components/atoms/Text';
-import TextInput from '../components/atoms/TextInput';
-import {colors} from '../styles';
-import Dropdown from '../components/atoms/Dropdown';
 import {useContext, useEffect, useState} from 'react';
-import {UserContext} from '../context/UserContext';
-import Loader from '../components/atoms/Loader';
-import AppLayout from '../layout/AppLayout';
+import Button from '../components/atoms/Button';
 import Card from '../components/atoms/Card';
+import Dropdown from '../components/atoms/Dropdown';
+import Loader from '../components/atoms/Loader';
+import TextInput from '../components/atoms/TextInput';
+import {UserContext} from '../context/UserContext';
+import AppLayout from '../layout/AppLayout';
+import {colors} from '../styles';
 
 export default function AddAccountModal({navigation, route}) {
   const {addAccount, updateAccount} = useContext(UserContext);

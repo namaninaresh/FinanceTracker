@@ -100,17 +100,27 @@ const debitPattern =
   /(?<accountNumber>\d{3})[^.]+ for Rs (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}).*?; (?<senderName>[\w\s]+) (credited|withdrew)\.?( UPI:(?<upiTransactionId>\d+))?\.?( Avb Bal: INR(?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))?)?/i;
 const atmWithDrawal =
   /ICICI Bank Acc XX(?<accountNumber>\d{3}) debited with INR (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})\. ATM\*(?<atmId>[A-Z]+[\d\w]+)\*\.Avb Bal: INR(?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))?\./i;
+/*const debitPatternLoan =
+  /ICICI Bank Acc XX(?<accountNumber>\d{3}) debited (?:with INR|Rs)\. (?<amount>\d+(,\d{3})*(\.\d{2})) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}) Info:(?<info>[^\.]+)\. Avl Bal is Rs\. (?<availableBalance>\d+(,\d{3})*(\.\d{2}))/i;
+*/
 const debitPatternLoan =
-  /ICICI Bank Acc XX(?<accountNumber>\d{3}) debited with INR (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})\..*?Info:(?<info>[^\.]+)\.*?Avl Bal is INR (?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))\./i;
+  /ICICI Bank Acc XX(?<accountNumber>\d{3}) debited(?: with INR)? Rs\. (?<amount>\d{1,3}(?:,\d{3})*(?:\.\d{2})) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}) Info(?<info>[^.]+).Avl Bal(?: with INR)? Rs\. (?<availableBalance>\d{1,3}(?:,\d{3})*(?:\.\d{2}))/i;
 
 const creditPattern =
   /(ICICI Bank Account|Acct) XX(?<accountNumber>\d{3}) (is credited with Rs|debited with INR) (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})(( by (?<senderName>[\w\s]+)\.)|( from (?<senderName2>[\w\s]+)\.))?/;
-const creditPatternBalance =
+/*const creditPatternBalance =
   /ICICI Bank (?:Account|Acc) XX(?<accountNumber>\d{3}).*?(?:debited|credited):Rs\. (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})\. .*?(Avb|Available) Bal(?:ance)? is Rs\. (?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))\./i;
 
-/*const upiCreditPattern =
+const upiCreditPattern =
   /Acct XX(?<accountNumber>\d{3}) is credited with Rs (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}) from (?<senderName>[\w\s]+)\. UPI:(?<upiTransactionId>\d+)-(?<upiAppName>[\w\s]+)\./;
-*/ const salaryCredit =
+
+const salaryCredit2 =
+  /ICICI Bank Account XX(?<accountNumber>\d{3}) credited:Rs.(?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}).*?NEFT-(?<neftRefNumber>\w+)-(?<neftSenderName>[\w\s]+)\. Available Balance is Rs.(?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))\./;
+*/
+const combinedPattern =
+  /ICICI Bank (?:Account|Acc) XX(?<accountNumber>\d{3}) (?:debited:Rs\.|credited:Rs\.) (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})(?:.*?NEFT-(?<neftRefNumber>\w+)-(?<neftSenderName>[\w\s]+)\.)? Available Balance is Rs\. (?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))\./i;
+
+const salaryCredit =
   /We have credited your ICICI Bank Account XX(?<accountNumber>\d{3}) with INR (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2}).*?NEFT-(?<neftRefNumber>\w+)-(?<neftSenderName>[\w\s]+)\. The Available Balance is INR (?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))\./;
 const debitPattern2 =
   /ICICI Bank Acc XX(?<accountNumber>\d{3}) debited with INR (?<amount>\d+(,\d{3})*(\.\d{1,2})?) on (?<date>\d{2}-[A-Za-z]{3}-\d{2})\. NFS\*(?<senderName>\d+)\*\.Avb Bal: INR(?<availableBalance>\d+(,\d{3})*(\.\d{1,2}))?/i;
@@ -121,18 +131,25 @@ const cardPattern =
 const paytmPattern =
   /You have paid Rs\.(?<amount>\d+\.\d{2}) via a\/c (?<accountNumber>\d{2}XX\d{4}) to (?<senderName>[\w\s]+) on (?<date>\d{2}-\d{2}-\d{4})\. Ref:(?<transactionId>\d+)\. Queries\?/i;
 
+const paytmPatternUpi3 =
+  /Rs\.(?<amount>\d+)\s+sent\sto\s(?<senderName>[^\s]+)\s+from\sPPBL\s+a\/c\s\d{2}XX(?<accountNumber>\d+)\.UPI\sRef:(?<upiRef>\d+);/;
+
 const paytmPatternUpi =
   /^\Rs\.(?<amount>\d+\.\d{2})\s+sent\s+to\s+(?<senderName>\S+)\s+from\s+PPBL\s+a\/c\s+(?<accountNumber>\d{2}XX\d{4})\.\s+UPI\s+Ref:(?<upiRef>\d+)\.\s+Balance:/;
 
-const paytmPatternUpi2 =
+/*const paytmPatternUpi2 =
   /^Rs\.(?<amount>\d+\.\d{2})\s+received\s+from\s+(?<senderName>[^\d]+)\s+in\s+PPBL\s+a\/c\s+(?<accountNumber>\d{2}XX\d{4})\.\s+UPI\s+Ref:\s*(?<upiRef>\d+)\s+Balance:/;
+*/
+const paytmPatternUpi2 =
+  /Rs\.(?<amount>(\d{1,3}(,\d{3})*(\.\d{1,2})?|\d+(\.\d{1,2})?))\s+received\s+from\s+(?<senderName>[^\d]+)\s+in\s+PPBL\s+a\/c\s+(?<accountNumber>\d{2}XX\d{4})(?:.\s+UPI\s+Ref:\s+(?<upiRef>\d+))?\s*Balance:/;
+const paytmRegex =
+  /Rs\.(?<amount>\d+\.\d{2})\s+sent\sto\s(?<senderName>[^\s]+)\s+from\sPPBL\s+a\/c\s\d{2}XX(?<accountNumber>\d+)\.UPI\sRef:(?<upiRef>\d+);/;
 
 const cardStatement =
   /statement for ICICI Bank Credit Card XX(?<accountNumber>\d{4}).*Total amount of Rs (?<amount>\d+(,\d{3})*(\.\d{1,2})?)/i;
 
 export const patterns = [
   creditPattern,
-  creditPatternBalance,
   debitPattern,
   salaryCredit,
   atmWithDrawal,
@@ -142,5 +159,8 @@ export const patterns = [
   paytmPattern,
   paytmPatternUpi,
   paytmPatternUpi2,
+  paytmPatternUpi3,
+  paytmRegex,
+  combinedPattern,
   cardStatement,
 ];

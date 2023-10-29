@@ -1,13 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ScrollView, RefreshControl} from 'react-native';
-import Dashboard from '../components/molecules/Dashboard';
-import FAB from '../components/molecules/Fab';
-import Recent from '../components/molecules/Recent';
-import AppLayout from '../layout/AppLayout';
-import Card from '../components/atoms/Card';
-import BookItem from '../components/atoms/BookItem';
-import Books from '../components/molecules/Books';
+import React from 'react';
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Books from '../components/molecules/Books';
+import AppLayout from '../layout/AppLayout';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../styles';

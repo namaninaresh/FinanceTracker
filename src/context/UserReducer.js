@@ -1,12 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StyleSheet, View, Text} from 'react-native';
-import getData, {updateAsyncStorage} from '../store/StoreAsync';
-import StoreAsync from '../store/StoreAsync';
+import {updateAsyncStorage} from '../store/StoreAsync';
 import {
   generateUniqueId,
   getCurrentTimeUnix,
   smsPatternsVerify,
-  sortedTransactionsByDate,
   sortedTransactionsOld,
 } from '../utils';
 
@@ -88,6 +85,7 @@ export default UserReducer = (state = initialState, action) => {
       updateAsyncStorage(temp);
       return temp;
     }
+
     case ADD_MULTIPLE_TRANSACTION: {
       let transactions = state.transactions;
       let accounts = [...state.accounts];
@@ -116,7 +114,6 @@ export default UserReducer = (state = initialState, action) => {
           } else {
             const smsDetails = smsPatternsVerify(transaction);
 
-            console.log('smsDe=', smsDetails);
             //console.log('sms', smsDetails);
             if (smsDetails && smsDetails.title !== undefined) {
               transaction.title = smsDetails && smsDetails.title;
@@ -164,8 +161,7 @@ export default UserReducer = (state = initialState, action) => {
                   title: `${accountType.toUpperCase()} ${
                     transaction.accountId
                   }`,
-                  amount:
-                    transaction.type === 'credited' ? 0 : transaction.amount,
+                  amount: 0,
                   desc: transaction.accountId,
                   vendor: accountType,
                 };
@@ -182,21 +178,29 @@ export default UserReducer = (state = initialState, action) => {
               if (account.vendor === 'bank') {
                 account.amount =
                   parseFloat(account.amount) - parseFloat(transaction.amount);
+
+                if (account.amount < 0) account.amount = 0;
                 totalExpense =
                   parseFloat(transaction.amount) + parseFloat(totalExpense);
               }
               if (account.vendor === 'card') {
-                account.amount = smsDetails && smsDetails.availableBalance;
+                account.amount += smsDetails && parseFloat(smsDetails.amount);
+                //account.amount = smsDetails && smsDetails.availableBalance;
 
                 totalExpense =
                   parseFloat(transaction.amount) + parseFloat(totalExpense);
               }
             } else if (transaction.type === 'credited') {
-              account.amount =
-                parseFloat(account.amount) + parseFloat(transaction.amount);
+              if (account.vendor === 'card') {
+                account.amount -= parseFloat(transaction.amount);
+                if (account.amount < 0) account.amount = 0;
+              } else
+                account.amount =
+                  parseFloat(account.amount) + parseFloat(transaction.amount);
             }
             if (smsDetails && smsDetails.availableBalance) {
-              account.amount = smsDetails.availableBalance;
+              if (account.vendor !== 'card')
+                account.amount = smsDetails.availableBalance;
             }
 
             if (transaction.desc.includes('ATM')) {
@@ -239,6 +243,7 @@ export default UserReducer = (state = initialState, action) => {
       updateAsyncStorage(temp);
       return temp;
     }
+
     case 'ADD_MULTIPLE_TRANSACTIONs': {
       let transactions = state.transactions;
       let accounts = state.accounts.slice();

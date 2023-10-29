@@ -1,17 +1,13 @@
-import {StyleSheet, View, Text} from 'react-native';
-import AppLayout from '../layout/AppLayout';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {colors} from '../styles';
+import Accounts from '../screens/Accounts';
 import Home from '../screens/Home';
-import Settings from '../screens/Settings';
-import AddTransaction from '../screens/AddTransaction';
 import Notifications from '../screens/Notifications';
+import Passbook from '../screens/Passbook';
 import Profile from '../screens/Profile';
 import Search from '../screens/Search';
-import FAB from '../components/molecules/Fab';
-import Passbook from '../screens/Passbook';
+import {colors} from '../styles';
 const Tab = createBottomTabNavigator();
 const items = [
   {
@@ -28,6 +24,11 @@ const items = [
     name: 'Passbook',
     component: Passbook,
     iconName: 'book-open',
+  },
+  {
+    name: 'Accounts',
+    component: Accounts,
+    iconName: 'bank',
   },
   {
     name: 'Notifications',
@@ -130,9 +131,5 @@ const BottomTabs = props => {
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default BottomTabs;

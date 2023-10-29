@@ -1,15 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import {
   Image,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import Button from '../components/atoms/Button';
 import AppLayout from '../layout/AppLayout';
 import {clearCache} from '../store/StoreAsync';

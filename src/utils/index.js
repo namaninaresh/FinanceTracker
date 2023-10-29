@@ -1,6 +1,4 @@
-import {useContext} from 'react';
 import {View} from 'react-native';
-import {UserContext} from '../context/UserContext';
 import {patterns} from './AppConstants';
 
 export function separator() {
@@ -214,7 +212,7 @@ export const sortedTransactionsOld = transations => {
 
 export const isFakeSms = message => {
   const fakeSmsPattern =
-    /claim|fake|prize|winner|congratulations|rummy|use code|spam/i;
+    /claim|fake|prize|winner|congratulations|rummy|use code|50%OFF|TeenPatti|spam/i;
   return fakeSmsPattern.test(message);
 };
 
@@ -224,8 +222,10 @@ export const smsPatternsVerify = transaction => {
     availableBalance: null,
     amount: null,
   };
+
   for (const pattern of patterns) {
     const match = transaction.desc.match(pattern);
+
     if (match) {
       const {
         senderName,
@@ -236,7 +236,7 @@ export const smsPatternsVerify = transaction => {
         accountNumber,
         availableBalance,
       } = match.groups;
-      console.log('admf=', match.groups);
+
       if (transaction.desc.includes('statement')) {
         sample.title = `Statement for ${accountNumber}`;
       }
@@ -265,7 +265,7 @@ export const smsPatternsVerify = transaction => {
         sample.title = 'Loan Amount Debited : IDFC';
 
       sample.amount = amount;
-      console.log('sameple', sample);
+
       return sample;
     }
   }

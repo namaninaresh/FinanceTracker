@@ -1,25 +1,23 @@
-import {createContext, useEffect, useReducer, useState} from 'react';
-import SmsAndroid from 'react-native-get-sms-android';
-import {PermissionsAndroid} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {createContext, useEffect, useReducer} from 'react';
+import {getInitialData} from '../store/StoreAsync';
 import UserReducer, {
   ADD_ACCOUNT,
-  ADD_MULTIPLE_TRANSACTION,
   ADD_BOOK,
+  ADD_MULTIPLE_TRANSACTION,
   ADD_TRANSACTION,
+  ADD_TRANSACTION_BOOK,
   DELETE_ACCOUNT,
+  DELETE_BOOK,
   DELETE_TRANSACTION,
-  initialState,
+  DELETE_TRANSACTION_BOOK,
   INITIAL_STATE,
   UPDATE_ACCOUNT,
-  UPDATE_TRANSACTION,
-  ADD_TRANSACTION_BOOK,
-  UPDATE_TRANSACTION_BOOK,
-  DELETE_BOOK,
   UPDATE_BOOK,
-  DELETE_TRANSACTION_BOOK,
+  UPDATE_TRANSACTION,
+  UPDATE_TRANSACTION_BOOK,
+  initialState,
 } from './UserReducer';
-import {useNavigation} from '@react-navigation/native';
-import {getInitialData, updateAsyncStorage} from '../store/StoreAsync';
 
 export const UserContext = createContext(initialState);
 
@@ -105,65 +103,6 @@ const UserContextProvider = ({children}) => {
       type: DELETE_ACCOUNT,
       payload: account,
     });
-  };
-
-  // State to store the SMS details
-  const [smsData, setSmsData] = useState([]);
-
-  var filter = {
-    box: 'inbox',
-    minDate: 1677522600, // timestamp (in milliseconds since UNIX epoch)
-
-    indexFrom: 0, // start from index 0
-    maxCount: 10, // count of SMS to return each time
-  };
-
-  const requestSmsPermission = async () => {
-    const tempItems = [];
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_SMS,
-        {
-          title: 'Sms Permission',
-          message:
-            'To read automatic transactions ' + ',need to get sms permission',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        SmsAndroid.list(
-          JSON.stringify(filter),
-          fail => {
-            console.log('Failed with this error: ' + fail);
-          },
-          (count, smsList) => {
-            //console.log('Count: ', count);
-            //console.log('List: ', smsList);
-            var arr = JSON.parse(smsList);
-
-            /*arr.forEach(function (object) {
-              const temp = {
-                title: object.body,
-                desc: object.body,
-                amount: 1000,
-                type: 'income',
-                date: object.date_sent,
-              };
-              tempItems.push(temp);
-            });
-            setItems(tempItems); */
-
-            setSmsData(arr);
-          },
-        );
-      } else {
-        console.log('Camera permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
   };
 
   //console.log(smsData);

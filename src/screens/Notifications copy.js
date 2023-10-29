@@ -29,7 +29,6 @@ const Notifications = props => {
     maxDate: new Date().getTime(),
 
     indexFrom: 0, // start from index 0
-
     bodyRegex:
       '(.*)(credited|debited|spent|received|Balance|sent|paid|balance)(.*)',
   };
@@ -93,6 +92,7 @@ const Notifications = props => {
                   );
                   if (amountMatch) {
                     amount = parseFloat(amountMatch[2].replace(/,/g, ''));
+                    console.log('index=' + index + 'amount=', amount);
                   }
 
                   // Extract the date
@@ -140,6 +140,19 @@ const Notifications = props => {
                       time: null,
                     },
                   });
+                  /* addTransaction({
+                    title: title,
+                    desc: description,
+                    amount: amount,
+                    type: type,
+                    smsId: object._id,
+                    date: new Date(object.date_sent),
+                    accountId: accountId,
+                    dateTimeText: {
+                      date: null,
+                      time: null,
+                    }, 
+                  }); */
                 }
               }
             });
