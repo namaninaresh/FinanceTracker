@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "539676487573",
+    "firebase_url": "https://tracker-app-25ce8-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tracker-app-25ce8",
+    "storage_bucket": "tracker-app-25ce8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:539676487573:android:439aed820c65b0b5cf109c",
+        "android_client_info": {
+          "package_name": "com.financetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA7IQ7yy4sV3WBSH_Ey_GYhFzzHQR_ju4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

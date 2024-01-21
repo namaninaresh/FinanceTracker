@@ -22,6 +22,9 @@ export const DELETE_BOOK = 'DELETE_BOOK';
 export const ADD_TRANSACTION_BOOK = 'ADD_TRANSACTION_BOOK';
 export const UPDATE_TRANSACTION_BOOK = 'UPDATE_TRANSACTION_BOOK';
 export const DELETE_TRANSACTION_BOOK = 'DELETE_TRANSACTION_BOOK';
+
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+
 export const initialState = {
   transactions: [],
   totalExpense: 0,
@@ -671,6 +674,14 @@ export default UserReducer = (state = initialState, action) => {
         books,
       };
       console.log('books==', books);
+      updateAsyncStorage(temp);
+      return temp;
+    }
+
+    case UPDATE_PROFILE: {
+      const {username, password, email} = action.payload;
+      let profile = {username: username, password: password, email: email};
+      let temp = {...state, profile};
       updateAsyncStorage(temp);
       return temp;
     }

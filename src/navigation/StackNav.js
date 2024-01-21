@@ -1,25 +1,23 @@
 import {Animated} from 'react-native';
 
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from '@react-navigation/stack';
-import {colors} from '../styles';
-import AllTransactions from '../screens/AllTransactions';
-import BottomTabs from './BottomTabs';
-import Accounts from '../screens/Accounts';
-import Settings from '../screens/Settings';
-import EditProfile from '../screens/EditProfile';
+import {createStackNavigator} from '@react-navigation/stack';
 import Modal from '../components/molecules/Modal';
-import Expenses from '../screens/Expenses';
-import EditTransaction from '../screens/EditTransaction';
+import Accounts from '../screens/Accounts';
 import AddAccountModal from '../screens/AddAccountModal';
+import AddBook from '../screens/AddBook';
+import AddTransBook from '../screens/AddTransBook';
 import AddTransaction from '../screens/AddTransaction';
-import Loans from '../screens/Loans';
+import AllTransactions from '../screens/AllTransactions';
 import Bills from '../screens/Bills';
 import BookInfo from '../screens/BookInfo';
-import AddTransBook from '../screens/AddTransBook';
-import AddBook from '../screens/AddBook';
+import EditProfile from '../screens/EditProfile';
+import EditTransaction from '../screens/EditTransaction';
+import EmaiTransactions from '../screens/EmaiTransactions';
+import Expenses from '../screens/Expenses';
+import Loans from '../screens/Loans';
+import Settings from '../screens/Settings';
+import {colors} from '../styles';
+import BottomTabs from './BottomTabs';
 const Stack = createStackNavigator();
 
 const items = [
@@ -90,6 +88,11 @@ const items = [
   {
     name: 'AddBook',
     component: AddBook,
+    headerShown: true,
+  },
+  {
+    name: 'EmailTransaction',
+    component: EmaiTransactions,
     headerShown: true,
   },
 ];

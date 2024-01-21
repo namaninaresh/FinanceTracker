@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {useContext} from 'react';
 import {
   Image,
   ScrollView,
@@ -9,11 +10,17 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../components/atoms/Button';
+import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {clearCache} from '../store/StoreAsync';
 import {colors} from '../styles';
 
 const items = [
+  {
+    title: 'Emails',
+    iconName: 'bank',
+    navigation: 'EmailTransaction',
+  },
   {
     title: 'Accounts',
     iconName: 'bank',
@@ -70,12 +77,7 @@ const items = [
 const ProfileHeader = () => {
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.userIconContainer}>
-        <Image
-          source={require('../assets/user.webp')}
-          style={styles.userIcon}
-        />
-      </View>
+      <View style={styles.userIconContainer}></View>
       <View>
         <Text style={[styles.usertitle]}>Chinna Namani</Text>
         <Text style={styles.userdescription}>lobelychinna@</Text>
@@ -105,8 +107,32 @@ const ProfileHeader = () => {
 
 const Profile = props => {
   const navigation = useNavigation();
+  const {profileData} = useContext(UserContext);
+
   return (
     <AppLayout>
+      <View style={styles.headerContainer}>
+        {/* Left Section (30%) */}
+        <View style={styles.leftSection}>
+          <Image
+            source={require('../assets/user.png')} // Replace with your icon path
+            style={styles.profileIcon}
+          />
+        </View>
+
+        {/* Right Section (70%) */}
+        <View style={styles.rightSection}>
+          <Text style={[styles.usertitle]}>{profileData.username}</Text>
+          <Text style={styles.userdescription}>{profileData.email}</Text>
+          <Button
+            title={'Edit Profile'}
+            style={{marginHorizontal: 0, marginVertical: 0}}
+            onPress={() => navigation.navigate('EditProfile', {title: 'Edit'})}
+            // onPress={() => navigation.navigate('Modal', {message: 'Success'})}
+          />
+        </View>
+      </View>
+
       <View style={styles.container}>
         {/* {<ProfileHeader />} */}
         <ScrollView
@@ -153,6 +179,30 @@ const styles = StyleSheet.create({
     padding: 0,
     marginTop: 20,
   },
+  leftSection: {
+    flex: 0.32,
+    //backgroundColor: '#3498db', // Left section background color
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rightSection: {
+    flex: 0.68,
+  },
+  profileIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40, // To make it round
+  },
+  usernameText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  emailText: {
+    width: '100%',
+    fontSize: 16,
+    color: '#7f8c8d', // Light gray color
+  },
   editProfilebtn: {
     padding: 10,
     backgroundColor: 'rgba(131, 191, 110, 0.15)',
@@ -164,10 +214,10 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     backgroundColor: colors.BLACK_4,
-
     borderRadius: 10,
     alignItems: 'center',
     paddingVertical: 10,
+    width: '100%',
   },
   userIconContainer: {
     alignItems: 'center',
@@ -175,8 +225,10 @@ const styles = StyleSheet.create({
     height: 90,
     justifyContent: 'center',
     backgroundColor: colors.BLACK_2,
+    backgroundColor: 'yellow',
     width: 90,
     marginHorizontal: 10,
+    maxWidth: '30%',
     marginRight: 20,
   },
   userIcon: {
@@ -186,12 +238,13 @@ const styles = StyleSheet.create({
   },
   usertitle: {
     fontWeight: '800',
+    fontSize: 18,
     color: colors.WHITE_2,
   },
   userdescription: {
     paddingVertical: 10,
-    fontWeight: '300',
-    letterSpacing: 1,
+    //letterSpacing: 1,
+    fontSize: 12,
     color: colors.WHITE_3,
   },
 

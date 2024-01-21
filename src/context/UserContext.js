@@ -14,6 +14,7 @@ import UserReducer, {
   INITIAL_STATE,
   UPDATE_ACCOUNT,
   UPDATE_BOOK,
+  UPDATE_PROFILE,
   UPDATE_TRANSACTION,
   UPDATE_TRANSACTION_BOOK,
   initialState,
@@ -105,6 +106,13 @@ const UserContextProvider = ({children}) => {
     });
   };
 
+  const updateProfile = account => {
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: account,
+    });
+  };
+
   //console.log(smsData);
   useEffect(() => {
     // getLastWorkingDay();
@@ -137,11 +145,13 @@ const UserContextProvider = ({children}) => {
         addTransactionBook,
         updateTransactionBook,
         deleteTransactionBook,
+        updateProfile,
         books: state.books,
         readSMSIDs: state.readSMSIDs,
         totalExpense: state.totalExpense,
         accounts: state.accounts,
         lastReadTimeStamp: state.lastReadTimeStamp,
+        profileData: state.profile,
       }}>
       {children}
     </UserContext.Provider>
