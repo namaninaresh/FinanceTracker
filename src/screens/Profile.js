@@ -22,6 +22,11 @@ const items = [
     navigation: 'EmailTransaction',
   },
   {
+    title: 'Login',
+    iconName: 'lock',
+    navigation: 'Login',
+  },
+  {
     title: 'Accounts',
     iconName: 'bank',
     navigation: 'Accounts',
@@ -108,22 +113,29 @@ const ProfileHeader = () => {
 const Profile = props => {
   const navigation = useNavigation();
   const {profileData} = useContext(UserContext);
-
   return (
     <AppLayout>
       <View style={styles.headerContainer}>
         {/* Left Section (30%) */}
         <View style={styles.leftSection}>
           <Image
-            source={require('../assets/user.png')} // Replace with your icon path
+            source={
+              profileData
+                ? {uri: profileData.photo}
+                : require('../assets/user.png')
+            } // Replace with your icon path
             style={styles.profileIcon}
           />
         </View>
 
         {/* Right Section (70%) */}
         <View style={styles.rightSection}>
-          <Text style={[styles.usertitle]}>{profileData.username}</Text>
-          <Text style={styles.userdescription}>{profileData.email}</Text>
+          <Text style={[styles.usertitle]}>
+            {profileData && profileData.username}
+          </Text>
+          <Text style={styles.userdescription}>
+            {profileData && profileData.email}
+          </Text>
           <Button
             title={'Edit Profile'}
             style={{marginHorizontal: 0, marginVertical: 0}}

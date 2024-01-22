@@ -679,8 +679,7 @@ export default UserReducer = (state = initialState, action) => {
     }
 
     case UPDATE_PROFILE: {
-      const {username, password, email} = action.payload;
-      let profile = {username: username, password: password, email: email};
+      let profile = action.payload;
       let temp = {...state, profile};
       updateAsyncStorage(temp);
       return temp;

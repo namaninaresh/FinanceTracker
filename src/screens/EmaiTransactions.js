@@ -1,12 +1,30 @@
-import {default as React, useState} from 'react';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {default as React, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Button from '../components/atoms/Button';
 import Text from '../components/atoms/Text';
-
+//539676487573-2l3v2t2h3065u9fsidcdivnd.apps.googleusercontent.com
 export default function EmailTransactions() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com',
+    });
+  });
+
+  _signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      const userInfo = await GoogleSignin.signIn();
+      console.log('user', userInfo);
+      setState({userInfo, error: undefined});
+    } catch (error) {
+      console.log('eeror', error.code);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Gmail Label Viewer</Text>
@@ -16,7 +34,7 @@ export default function EmailTransactions() {
           <Text style={styles.label}>User: {user.user.email}</Text>
         </View>
       ) : (
-        <Button title={'Sign with Google'} onPress={() => {}} />
+        <Button title={'Sign with Google'} onPress={_signIn} />
       )}
       {error && <Text style={styles.error}>{error}</Text>}
     </View>

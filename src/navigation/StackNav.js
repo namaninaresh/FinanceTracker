@@ -15,6 +15,7 @@ import EditTransaction from '../screens/EditTransaction';
 import EmaiTransactions from '../screens/EmaiTransactions';
 import Expenses from '../screens/Expenses';
 import Loans from '../screens/Loans';
+import Login from '../screens/Login';
 import Settings from '../screens/Settings';
 import {colors} from '../styles';
 import BottomTabs from './BottomTabs';
@@ -93,6 +94,11 @@ const items = [
   {
     name: 'EmailTransaction',
     component: EmaiTransactions,
+    headerShown: true,
+  },
+  {
+    name: 'Login',
+    component: Login,
     headerShown: true,
   },
 ];
