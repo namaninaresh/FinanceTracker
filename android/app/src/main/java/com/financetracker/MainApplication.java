@@ -8,6 +8,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
+//import co.apptailor.googlesignin.RNGoogleSigninPackage;
+//import com.reactnativegooglesignin.RNGoogleSigninPackage;
 
 import java.util.List;
 
@@ -26,9 +28,14 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+         // packages.add(new RNGoogleSigninPackage());
           return packages;
         }
-
+/*
+@Override    
+public boolean canOverrideExistingModule() {        
+  return true;    
+}   */
         @Override
         protected String getJSMainModuleName() {
           return "index";

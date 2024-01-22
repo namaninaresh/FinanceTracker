@@ -32,5 +32,12 @@
         android:exported="true">
 
       </activity>
+      <meta-data
+    android:name="com.google.android.gms.auth.api.client.default_client"
+    android:value="@string/google_signin_client_id" />
+<resources>
+  <string name="google_signin_client_id">539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com</string>
+</resources>
+
     </application>
 </manifest>
