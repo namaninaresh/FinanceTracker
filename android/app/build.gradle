@@ -99,6 +99,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [appAuthRedirectScheme: 'com.redirectScheme.comm']
     }
 
     splits {
@@ -142,6 +143,7 @@ android {
                 output.versionCodeOverride =
                         defaultConfig.versionCode * 1000 + versionCodes.get(abi)
             }
+              output.processResources.dependsOn ':react-native-google-signin_google-signin:parseDebugLocalResources'
 
         }
     }

@@ -2,6 +2,7 @@ import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
 import {useContext, useState} from 'react';
 import {Keyboard, StyleSheet, Text, View} from 'react-native';
 import Button from '../components/atoms/Button';
@@ -13,7 +14,43 @@ import {colors} from '../styles';
 GoogleSignin.configure({
   webClientId:
     '539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com',
+  redirectUrl: 'http://localhost:3000',
+  offlineAccess: true,
+  scopes: ['https://www.googleapis.com/auth/gmail.readonly'],
 });
+
+const fetchGmailData = async idToken => {
+  try {
+    // Exchange the ID token for an access token
+    const response = await axios.post(
+      'https://www.googleapis.com/oauth2/v4/token',
+      {
+        code: idToken,
+        client_id:
+          '539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com',
+        client_secret: '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',
+        grant_type: 'authorization_code',
+      },
+    );
+    console.log('here ', response);
+    const accessToken = response.data.access_token;
+
+    // Fetch Gmail data using the access token
+    const gmailResponse = await axios.get(
+      'https://www.googleapis.com/gmail/v1/users/me/messages',
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    console.log('gmail', gmailResponse);
+    return gmailResponse.data;
+  } catch (error) {
+    console.error('Error fetching Gmail data:', error);
+    throw error;
+  }
+};
 const Login = props => {
   const [inputs, setInputs] = useState({
     username: '',
@@ -29,7 +66,10 @@ const Login = props => {
       const userInfo = await GoogleSignin.signIn();
 
       const temp = {...userInfo.user, username: userInfo.user.name};
-      updateProfile(temp);
+
+      // fetchGmailData(userInfo.idToken);
+      console.log('temp', userInfo);
+      //updateProfile(temp);
       //  setState({userInfo, error: undefined});
     } catch (error) {
       setErrors({...errors, login: 'Failed to Login'});
