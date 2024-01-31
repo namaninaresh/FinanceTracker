@@ -1,23 +1,16 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, {useContext, useState} from 'react';
-import {
-  Alert,
-  Keyboard,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Keyboard, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../components/atoms/Button';
 import Card from '../components/atoms/Card';
 import Loader from '../components/atoms/Loader';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Text from '../components/atoms/Text';
 import TextInput from '../components/atoms/TextInput';
+import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
-import Text from '../components/atoms/Text';
 import {dateFormatter} from '../utils';
-import {UserContext} from '../context/UserContext';
-import {useNavigation} from '@react-navigation/native';
 
 const EditTransaction = ({navigation, route}) => {
   //const navigation = useNavigation();
@@ -64,16 +57,7 @@ const EditTransaction = ({navigation, route}) => {
     setTimeout(async () => {
       setLoading(false);
       addTransaction(inputs);
-      setInputs({
-        title: '',
-        amount: 0,
-        desc: '',
-        date: new Date(),
-        dateTimeText: {
-          date: null,
-          time: null,
-        },
-      });
+      handleReset();
 
       // Alert.alert('Error', 'Something is wrong');
     }, 3000);

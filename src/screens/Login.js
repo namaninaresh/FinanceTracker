@@ -10,6 +10,7 @@ import TextInput from '../components/atoms/TextInput';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
+import secrets from '../utils/Secrets';
 
 GoogleSignin.configure({
   webClientId:
@@ -22,28 +23,21 @@ GoogleSignin.configure({
 const fetchGmailData = async idToken => {
   try {
     // Exchange the ID token for an access token
-    const response = await axios.post(
-      'https://www.googleapis.com/oauth2/v4/token',
-      {
-        code: idToken,
-        client_id:
-          '539676487573-2l3v2t2h3065u9fsidcdivnbqmsqbtub.apps.googleusercontent.com',
-        client_secret: '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',
-        grant_type: 'authorization_code',
-      },
-    );
+    const response = await axios.post(secrets.googleAuthTokenUR, {
+      code: idToken,
+      client_id: secrets.clientId,
+      client_secret: secrets.clientSecret,
+      grant_type: 'authorization_code',
+    });
     console.log('here ', response);
     const accessToken = response.data.access_token;
 
     // Fetch Gmail data using the access token
-    const gmailResponse = await axios.get(
-      'https://www.googleapis.com/gmail/v1/users/me/messages',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const gmailResponse = await axios.get(secrets.gmailURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
     console.log('gmail', gmailResponse);
     return gmailResponse.data;
   } catch (error) {
@@ -51,7 +45,7 @@ const fetchGmailData = async idToken => {
     throw error;
   }
 };
-const Login = props => {
+const Login = ({navigation, route}) => {
   const [inputs, setInputs] = useState({
     username: '',
     password: '',
@@ -68,8 +62,11 @@ const Login = props => {
       const temp = {...userInfo.user, username: userInfo.user.name};
 
       // fetchGmailData(userInfo.idToken);
-      console.log('temp', userInfo);
-      //updateProfile(temp);
+      updateProfile(temp);
+
+      try {
+        navigation.goBack();
+      } catch (error) {}
       //  setState({userInfo, error: undefined});
     } catch (error) {
       setErrors({...errors, login: 'Failed to Login'});

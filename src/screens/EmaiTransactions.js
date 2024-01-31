@@ -1,24 +1,24 @@
 import axios from 'axios';
 import {decode} from 'base-64';
-import {default as React, useContext, useState} from 'react';
+import {default as React, useContext, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {authorize} from 'react-native-app-auth';
-import Button from '../components/atoms/Button';
+import {authorize, revoke} from 'react-native-app-auth';
 import Text from '../components/atoms/Text';
 
+import {FlatList} from 'react-native-gesture-handler';
+import Button from '../components/atoms/Button';
+import Card from '../components/atoms/Card';
 import {UserContext} from '../context/UserContext';
+import AppLayout from '../layout/AppLayout';
+import secrets from '../utils/Secrets';
 const response = {
-  access_token:
-    'ya29.a0AfB_byD0zSraw0I-70ikD8yjekhQJ4nUDV79bB-fKsyFQFFxNIAf693xLdWMsakYNXHqgikS7aDJrC0g5zpX5uvZWoWlIHIC3k-DCPT4g3wjFd3nX6JaO_HiYZj4rxrktP3h_eGJYBrgl8Pm40BNtK4SsvQziXwDmjwBaCgYKAVQSARASFQHGX2MiKNIn91qpXhItyfg9Tzm3WQ0171',
-  scope:
-    'https://www.googleapis.com/auth/gmail.insert https://www.googleapis.com/auth/gmail.addons.current.message.action https://mail.google.com/ https://www.googleapis.com/auth/gmail.labels https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.addons.current.action.compose https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.addons.current.message.metadata https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.settings.basic https://www.googleapis.com/auth/gmail.settings.sharing https://www.googleapis.com/auth/gmail.addons.current.message.readonly',
-  token_type: 'Bearer',
-  expires_in: 3599,
-  refresh_token:
-    '1//04czV52nJCVEMCgYIARAAGAQSNwF-L9Ir9SyXZtMCVYpNCr2pQ_e_yMa6WD4zkM9c4KXZjrQBOAsk5Szc0xhEpdpTbWsXmvpxbV0',
-};
-//539676487573-2l3v2t2h3065u9fsidcdivnd.apps.googleusercontent.com
+  access_token: secrets.gmailAccessToken,
 
+  scope: secrets.gmailScopes,
+  token_type: secrets.gmailTokenType,
+  expires_in: secrets.gmailExpires,
+  refresh_token: secrets.gmailRefreshToken,
+};
 const isMessageFromSender = (messageData, desiredSender) => {
   const fromHeader = messageData.payload.headers.find(
     header => header.name === 'From',
@@ -112,17 +112,22 @@ async function getAccessToken() {
   }
 }
 
-export default function EmailTransactions() {
+export default EmailTransactions = ({navigation, route}) => {
   const [user, setUser] = useState(null);
-  const [googleReqHeader, setGoogleReqHeader] = useState(getAccessToken());
 
-  // 539676487573-tageg578j1rl0qlaih1v9hsdltgn2a42.apps.googleusercontent.com
+  const [googleReqHeader, setGoogleReqHeader] = useState(getAccessToken());
 
   // const [accessToken, setAccessToken] = React.useState('');
   const [labels, setLabels] = React.useState([]);
   const [error, setError] = React.useState('');
 
-  const {profileData} = useContext(UserContext);
+  const {profileData, addEmails, emails} = useContext(UserContext);
+  // const [emailSubjects, setEmailSubjects] = useState([]);
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Transaction Emails ',
+    });
+  }, []);
   // Function to initiate OAuth2 authentication
   const handleLogin = async () => {
     try {
@@ -138,7 +143,6 @@ export default function EmailTransactions() {
         Authorization: `Bearer ${accessToken}`,
       };
 
-      console.log('ac', accessToken);
       axios
         .get(apiUrl, {headers})
         .then(response => {
@@ -172,25 +176,18 @@ export default function EmailTransactions() {
 
     // Make a request to the Gmail API using the access token
     try {
-      const apiResponse = await fetch(
-        'https://www.googleapis.com/gmail/v1/users/me/messages',
-        {
-          method: 'GET',
-          headers: headers,
-        },
-      );
+      const apiResponse = await fetch(secrets.gmailURL, {
+        method: 'GET',
+        headers: headers,
+      });
 
       const jsonData = await apiResponse.json();
-      // console.log('Gmail API Response:', jsonData);
-      //console.log('hs', jsonData);
       const messages = jsonData.messages;
 
-      for (let i = 0; i < 3; i++) {
-        const messageId = messages[i].id;
-        // for (const message of messages) {
-        // const messageId = message.id;
+      for (const message of messages) {
+        const messageId = message.id;
         const messageResponse = await fetch(
-          `https://www.googleapis.com/gmail/v1/users/me/messages/${messageId}`,
+          `${secrets.gmailURL}/${messageId}`,
           {
             method: 'GET',
             headers: headers,
@@ -198,7 +195,7 @@ export default function EmailTransactions() {
         );
 
         const messageData = await messageResponse.json();
-        const desiredSender = '<noreply@phonepe.com>';
+        const desiredSender = secrets.emailFrom;
 
         // Extract specific details if the message is from the desired sender
         if (isMessageFromSender(messageData, desiredSender)) {
@@ -272,9 +269,6 @@ export default function EmailTransactions() {
 
     await ensureAccessToken();
 
-    console.log('aa', accessToken);
-    //console.log('token=', token);
-
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -284,9 +278,7 @@ export default function EmailTransactions() {
       const subjectQuery = 'subject:(Sent OR received)';
 
       const apiResponse = await fetch(
-        `https://www.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent(
-          subjectQuery,
-        )}`,
+        `${secrets.gmailURL}?q=${encodeURIComponent(subjectQuery)}`,
         {
           method: 'GET',
           headers: headers,
@@ -296,15 +288,13 @@ export default function EmailTransactions() {
       const jsonData = await apiResponse.json();
 
       const messages = jsonData.messages;
-
+      let temp = [];
+      let index = 0;
       for (const message of messages) {
-        const apiResponse = await fetch(
-          `https://www.googleapis.com/gmail/v1/users/me/messages/${message.id}`,
-          {
-            method: 'GET',
-            headers: headers,
-          },
-        );
+        const apiResponse = await fetch(`${secrets.gmailURL}/${message.id}`, {
+          method: 'GET',
+          headers: headers,
+        });
 
         const emailContent = await apiResponse.json();
 
@@ -312,6 +302,8 @@ export default function EmailTransactions() {
         const emailSubject = emailContent.payload.headers.find(
           header => header.name === 'Subject',
         ).value;
+        temp.push({id: index, subject: emailSubject});
+        index++;
         try {
           const headers = emailContent.payload.headers.reduce((acc, header) => {
             acc[header.name] = header.value;
@@ -358,30 +350,56 @@ export default function EmailTransactions() {
         console.log(`Subject: ${emailSubject}`);
         //  console.log('body', emailContent.payload);
       }
+      console.log('temp=', temp);
+      addEmails(temp);
+      //setEmailSubjects(temp);
     } catch (error) {
       console.error('Error fetching Gmail data:', error);
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Gmail Label Viewer</Text>
-      {accessToken ? (
-        <View>
-          <Button title="Log Out" onPress={handleLogout} />
-          <Text style={styles.label}>Access Token: {accessToken}</Text>
-          {labels.length > 0 && <Text style={styles.label}>Gmail Labels:</Text>}
-          <Text style={styles.label}>
-            {labels.map(label => label.name).join(', ')}
-          </Text>
-        </View>
-      ) : (
-        <Button title="Log In with Google" onPress={fetchGmailData} />
-      )}
-      {error !== '' && <Text style={styles.error}>{error}</Text>}
+  const renderItem = ({item}) => (
+    <View
+      style={{padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc'}}>
+      <Text>{item.subject}</Text>
     </View>
   );
-}
+  return (
+    <AppLayout>
+      <Card>
+        <Card.Title>Emails </Card.Title>
+        {error !== '' && <Text style={styles.error}>{error}</Text>}
+        <FlatList
+          data={emails}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          ListFooterComponent={() =>
+            emails.length > 0 ? (
+              <>
+                <Button size="xs" title="Refresh" onPress={fetchGmailData} />
+                <Button
+                  mode="outlined"
+                  title="Log Out"
+                  onPress={handleLogout}
+                />
+              </>
+            ) : (
+              <Button title="Read Emails" onPress={fetchGmailData} />
+            )
+          }
+          contentContainerStyle={[
+            {
+              padding: 5,
+            },
+            emails.length > 0 && {paddingBottom: 50},
+          ]}
+        />
+      </Card>
+    </AppLayout>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

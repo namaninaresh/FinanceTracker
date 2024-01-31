@@ -113,6 +113,7 @@ const ProfileHeader = () => {
 const Profile = props => {
   const navigation = useNavigation();
   const {profileData} = useContext(UserContext);
+  console.log('profile data', profileData);
   return (
     <AppLayout>
       <View style={styles.headerContainer}>
@@ -137,9 +138,13 @@ const Profile = props => {
             {profileData && profileData.email}
           </Text>
           <Button
-            title={'Edit Profile'}
+            title={profileData ? 'Edit Profile' : 'Login'}
             style={{marginHorizontal: 0, marginVertical: 0}}
-            onPress={() => navigation.navigate('EditProfile', {title: 'Edit'})}
+            onPress={() =>
+              profileData
+                ? navigation.navigate('EditProfile', {title: 'Edit'})
+                : navigation.navigate('Login')
+            }
             // onPress={() => navigation.navigate('Modal', {message: 'Success'})}
           />
         </View>
@@ -150,6 +155,7 @@ const Profile = props => {
         <ScrollView
           contentContainerStyle={{
             width: '100%',
+            paddingBottom: 100,
           }}>
           <View
             style={{

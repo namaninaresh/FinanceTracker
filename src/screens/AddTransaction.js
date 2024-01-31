@@ -1,25 +1,22 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  Alert,
   Keyboard,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../components/atoms/Button';
 import Card from '../components/atoms/Card';
 import Loader from '../components/atoms/Loader';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Text from '../components/atoms/Text';
 import TextInput from '../components/atoms/TextInput';
+import CustomPicker from '../components/molecules/CustomPicker';
+import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {colors} from '../styles';
-import Text from '../components/atoms/Text';
-import {dateFormatter} from '../utils';
-import {UserContext} from '../context/UserContext';
-import {useNavigation} from '@react-navigation/native';
-import CustomPicker from '../components/molecules/CustomPicker';
 
 import Picker from '../components/molecules/Picker';
 
@@ -94,17 +91,13 @@ const AddTransaction = ({navigation, route}) => {
       } catch (error) {
         console.log('error', error);
       }
-      setInputs({
-        title: '',
-        amount: 0,
-        desc: '',
-        accountId: null,
-        date: new Date(),
-        dateTimeText: {
-          date: null,
-          time: null,
-        },
-      });
+
+      handleReset();
+      try {
+        if (route.params) navigation.goBack();
+      } catch (error) {
+        console.warn('navigating to previous page error.');
+      }
 
       // Alert.alert('Error', 'Something is wrong');
     }, 3000);

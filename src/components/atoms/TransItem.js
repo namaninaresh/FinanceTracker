@@ -1,10 +1,10 @@
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import {colors} from '../../styles';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {dateFormatter, MoneyFormat, rupee} from '../../utils';
+import {colors} from '../../styles';
+import {MoneyFormat, dateFormatter} from '../../utils';
 
-import {Swipeable} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import {Swipeable} from 'react-native-gesture-handler';
 
 let row = [];
 let prevOpenedRow;
@@ -49,6 +49,7 @@ const TransItem = ({
   };
 
   const renderRightActions = (progress, dragX, onClick) => {
+    console.log('right', onClick);
     return (
       <TouchableOpacity
         onPress={onClick}

@@ -1,10 +1,11 @@
 import {StyleSheet, View} from 'react-native';
+import Card from '../components/atoms/Card';
 import Text from '../components/atoms/Text';
 import Badge from '../components/molecules/Badge';
 import Chip from '../components/molecules/Chip';
 import TextInputAnim from '../components/molecules/TextInputAnim';
 import AppLayout from '../layout/AppLayout';
-const Search = props => {
+const SearchOld = props => {
   return (
     <AppLayout style={{backgroundColor: '#000'}}>
       <View style={styles.container}>
@@ -56,6 +57,18 @@ const Search = props => {
   );
 };
 
+const Search = props => {
+  return (
+    <AppLayout style={{backgroundColor: '#000'}}>
+      <Card>
+        <Card.Title>Search</Card.Title>
+        <View style={styles.container}>
+          <Text>Search </Text>
+        </View>
+      </Card>
+    </AppLayout>
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

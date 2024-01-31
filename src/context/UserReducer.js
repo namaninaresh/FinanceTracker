@@ -24,12 +24,14 @@ export const UPDATE_TRANSACTION_BOOK = 'UPDATE_TRANSACTION_BOOK';
 export const DELETE_TRANSACTION_BOOK = 'DELETE_TRANSACTION_BOOK';
 
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const ADD_EMAILS = ADD_EMAILS;
 
 export const initialState = {
   transactions: [],
   totalExpense: 0,
   accounts: [],
   books: [],
+  emails: [],
   readSMSIDs: [],
   lastReadTimeStamp: 0,
 };
@@ -479,6 +481,7 @@ export default UserReducer = (state = initialState, action) => {
     }
 
     case DELETE_TRANSACTION: {
+      console.log('detel');
       let transactions = state.transactions.filter(
         item => item.id !== action.payload.id,
       );
@@ -499,15 +502,14 @@ export default UserReducer = (state = initialState, action) => {
         totalExpense =
           parseFloat(state.totalExpense) - parseFloat(action.payload.amount);
       }
-
-      updateAsyncStorage(temp);
-      return (temp = {
+      let temp = {
         ...state,
-
         transactions,
         totalExpense,
         accounts,
-      });
+      };
+      updateAsyncStorage(temp);
+      return temp;
     }
 
     case ADD_ACCOUNT:
@@ -681,6 +683,13 @@ export default UserReducer = (state = initialState, action) => {
     case UPDATE_PROFILE: {
       let profile = action.payload;
       let temp = {...state, profile};
+      updateAsyncStorage(temp);
+      return temp;
+    }
+
+    case ADD_EMAILS: {
+      let emails = action.payload;
+      let temp = {...state, emails};
       updateAsyncStorage(temp);
       return temp;
     }

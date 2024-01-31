@@ -8,10 +8,7 @@ import {
   View,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import Card from '../components/atoms/Card';
-import Dropdown from '../components/atoms/Dropdown';
 import Text from '../components/atoms/Text';
 import TransItem from '../components/atoms/TransItem';
 import Chip from '../components/molecules/Chip';
@@ -19,11 +16,9 @@ import CustomPicker from '../components/molecules/CustomPicker';
 import FAB from '../components/molecules/Fab';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
-import {colors} from '../styles';
 import {
   convertDateToUnix,
   getCurrentDayStartingTimeUnix,
-  getCurrentTimeUnix,
   sortedTransactionsByDate,
 } from '../utils';
 
@@ -154,6 +149,9 @@ const AllTransactions = ({navigation}) => {
       <View>
         <ScrollView
           horizontal
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           showsHorizontalScrollIndicator={false}
           bounces={true}>
           {filterSelected.map((filter, index) => (

@@ -1,21 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  FlatList,
-  PermissionsAndroid,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-
-import Card from '../components/atoms/Card';
+import {PermissionsAndroid} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import SmsAndroid from 'react-native-get-sms-android';
-import Dropdown from '../components/atoms/Dropdown';
+import Card from '../components/atoms/Card';
 import Text from '../components/atoms/Text';
-import TransItem from '../components/atoms/TransItem';
-import Chip from '../components/molecules/Chip';
-import FAB from '../components/molecules/Fab';
 import {UserContext} from '../context/UserContext';
 import AppLayout from '../layout/AppLayout';
 import {getLastWorkingDay, isFakeSms} from '../utils';
@@ -202,7 +191,13 @@ const Notifications = props => {
   };
   return (
     <AppLayout>
-      <View
+      <Card>
+        <Card.Title>Notifications</Card.Title>
+        <Text style={{textAlign: 'center', padding: 20}}>
+          No Notifications..
+        </Text>
+      </Card>
+      {/* <View
         style={{
           flexDirection: 'row',
           zIndex: 1000,
@@ -217,7 +212,6 @@ const Notifications = props => {
           }}>
           <Text style={{paddingHorizontal: 10}}>Filter By</Text>
 
-          {/*<Icon name="filter-variant" size={24} color={'white'} /> */}
         </TouchableOpacity>
         <Dropdown options={options} onValueChange={onValueChange} />
       </View>
@@ -261,8 +255,8 @@ const Notifications = props => {
             paddingBottom: 20 + (filterSelected.length > 0 && 30),
           }}
         />
-      </Card>
-      <FAB />
+        </Card> 
+        <FAB /> */}
     </AppLayout>
   );
 };

@@ -63,3 +63,6 @@ yarn-error.log
 .metro-health-check*
 
 react-native-apk-building.txt
+
+
+src/utils/Secrets.js

@@ -4,6 +4,7 @@ import {getInitialData} from '../store/StoreAsync';
 import UserReducer, {
   ADD_ACCOUNT,
   ADD_BOOK,
+  ADD_EMAILS,
   ADD_MULTIPLE_TRANSACTION,
   ADD_TRANSACTION,
   ADD_TRANSACTION_BOOK,
@@ -113,6 +114,12 @@ const UserContextProvider = ({children}) => {
     });
   };
 
+  const addEmails = emails => {
+    dispatch({
+      type: ADD_EMAILS,
+      payload: emails,
+    });
+  };
   //console.log(smsData);
   useEffect(() => {
     // getLastWorkingDay();
@@ -139,6 +146,8 @@ const UserContextProvider = ({children}) => {
         addBook,
         deleteBook,
         updateBook,
+        addEmails,
+        emails: state.emails,
         addMultipleTransaction,
         updateTransaction,
         deleteTransaction,
